@@ -16,6 +16,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        
+        // Create and set ChatLogStore
+        let chatLogStore = ChatLogStore()
+        let chatsViewController = window!.rootViewController as! ChatsViewController
+        chatsViewController.chatLogStore = chatLogStore
+        
+        
         return true
     }
 

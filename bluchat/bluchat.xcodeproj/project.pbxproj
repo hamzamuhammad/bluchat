@@ -7,20 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		12CDE67E6D79F26C5DBE5E0B /* Pods_bluchat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 87CFB6DF15BEF529AE7D0F7B /* Pods_bluchat.framework */; };
 		1F8EF0531D52808E006BD185 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8EF0521D52808E006BD185 /* AppDelegate.swift */; };
-		1F8EF0551D52808E006BD185 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8EF0541D52808E006BD185 /* ViewController.swift */; };
 		1F8EF0581D52808E006BD185 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EF0561D52808E006BD185 /* Main.storyboard */; };
 		1F8EF05A1D52808E006BD185 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EF0591D52808E006BD185 /* Assets.xcassets */; };
 		1F8EF05D1D52808E006BD185 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EF05B1D52808E006BD185 /* LaunchScreen.storyboard */; };
 		1F8EF0671D528343006BD185 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F8EF0641D528343006BD185 /* FBSDKCoreKit.framework */; };
 		1F8EF0681D528343006BD185 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F8EF0651D528343006BD185 /* FBSDKLoginKit.framework */; };
 		1F8EF0691D528343006BD185 /* FBSDKMessengerShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F8EF0661D528343006BD185 /* FBSDKMessengerShareKit.framework */; };
+		1F8EF06B1D5298FF006BD185 /* ChatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8EF06A1D5298FF006BD185 /* ChatsViewController.swift */; };
+		1F8EF06D1D529B4F006BD185 /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8EF06C1D529B4F006BD185 /* MessagesViewController.swift */; };
+		1F8EF06F1D52A323006BD185 /* ChatLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8EF06E1D52A323006BD185 /* ChatLog.swift */; };
+		1F8EF0711D52A4E9006BD185 /* ChatLogStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8EF0701D52A4E9006BD185 /* ChatLogStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		106D52A46129FBAE9720F4BA /* Pods-bluchat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-bluchat.debug.xcconfig"; path = "Pods/Target Support Files/Pods-bluchat/Pods-bluchat.debug.xcconfig"; sourceTree = "<group>"; };
 		1F8EF04F1D52808E006BD185 /* bluchat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = bluchat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F8EF0521D52808E006BD185 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		1F8EF0541D52808E006BD185 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		1F8EF0571D52808E006BD185 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		1F8EF0591D52808E006BD185 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1F8EF05C1D52808E006BD185 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -28,6 +32,12 @@
 		1F8EF0641D528343006BD185 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../../../FacebookSDK/FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		1F8EF0651D528343006BD185 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKLoginKit.framework; path = ../../../FacebookSDK/FBSDKLoginKit.framework; sourceTree = "<group>"; };
 		1F8EF0661D528343006BD185 /* FBSDKMessengerShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKMessengerShareKit.framework; path = ../../../FacebookSDK/FBSDKMessengerShareKit.framework; sourceTree = "<group>"; };
+		1F8EF06A1D5298FF006BD185 /* ChatsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatsViewController.swift; sourceTree = "<group>"; };
+		1F8EF06C1D529B4F006BD185 /* MessagesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagesViewController.swift; sourceTree = "<group>"; };
+		1F8EF06E1D52A323006BD185 /* ChatLog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatLog.swift; sourceTree = "<group>"; };
+		1F8EF0701D52A4E9006BD185 /* ChatLogStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatLogStore.swift; sourceTree = "<group>"; };
+		87CFB6DF15BEF529AE7D0F7B /* Pods_bluchat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_bluchat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B600358B79F8119828254519 /* Pods-bluchat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-bluchat.release.xcconfig"; path = "Pods/Target Support Files/Pods-bluchat/Pods-bluchat.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -38,12 +48,21 @@
 				1F8EF0671D528343006BD185 /* FBSDKCoreKit.framework in Frameworks */,
 				1F8EF0681D528343006BD185 /* FBSDKLoginKit.framework in Frameworks */,
 				1F8EF0691D528343006BD185 /* FBSDKMessengerShareKit.framework in Frameworks */,
+				12CDE67E6D79F26C5DBE5E0B /* Pods_bluchat.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		19A4BC945B3A878D27AC25BF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				87CFB6DF15BEF529AE7D0F7B /* Pods_bluchat.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		1F8EF0461D52808E006BD185 = {
 			isa = PBXGroup;
 			children = (
@@ -52,6 +71,8 @@
 				1F8EF0661D528343006BD185 /* FBSDKMessengerShareKit.framework */,
 				1F8EF0511D52808E006BD185 /* bluchat */,
 				1F8EF0501D52808E006BD185 /* Products */,
+				A76380070445AF604B1AD9A8 /* Pods */,
+				19A4BC945B3A878D27AC25BF /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -67,13 +88,25 @@
 			isa = PBXGroup;
 			children = (
 				1F8EF0521D52808E006BD185 /* AppDelegate.swift */,
-				1F8EF0541D52808E006BD185 /* ViewController.swift */,
+				1F8EF06A1D5298FF006BD185 /* ChatsViewController.swift */,
+				1F8EF06C1D529B4F006BD185 /* MessagesViewController.swift */,
 				1F8EF0561D52808E006BD185 /* Main.storyboard */,
+				1F8EF0701D52A4E9006BD185 /* ChatLogStore.swift */,
+				1F8EF06E1D52A323006BD185 /* ChatLog.swift */,
 				1F8EF0591D52808E006BD185 /* Assets.xcassets */,
 				1F8EF05B1D52808E006BD185 /* LaunchScreen.storyboard */,
 				1F8EF05E1D52808E006BD185 /* Info.plist */,
 			);
 			path = bluchat;
+			sourceTree = "<group>";
+		};
+		A76380070445AF604B1AD9A8 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				106D52A46129FBAE9720F4BA /* Pods-bluchat.debug.xcconfig */,
+				B600358B79F8119828254519 /* Pods-bluchat.release.xcconfig */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -83,9 +116,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1F8EF0611D52808E006BD185 /* Build configuration list for PBXNativeTarget "bluchat" */;
 			buildPhases = (
+				CBA0B66B58900B8DADCAFD51 /* [CP] Check Pods Manifest.lock */,
 				1F8EF04B1D52808E006BD185 /* Sources */,
 				1F8EF04C1D52808E006BD185 /* Frameworks */,
 				1F8EF04D1D52808E006BD185 /* Resources */,
+				B8BFAD39B53CC0DE1F4B7D3D /* [CP] Embed Pods Frameworks */,
+				5ADE2D4362C78294EF57F8DD /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -142,12 +178,63 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		5ADE2D4362C78294EF57F8DD /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-bluchat/Pods-bluchat-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B8BFAD39B53CC0DE1F4B7D3D /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-bluchat/Pods-bluchat-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CBA0B66B58900B8DADCAFD51 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		1F8EF04B1D52808E006BD185 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1F8EF0551D52808E006BD185 /* ViewController.swift in Sources */,
+				1F8EF06D1D529B4F006BD185 /* MessagesViewController.swift in Sources */,
+				1F8EF0711D52A4E9006BD185 /* ChatLogStore.swift in Sources */,
+				1F8EF06B1D5298FF006BD185 /* ChatsViewController.swift in Sources */,
+				1F8EF06F1D52A323006BD185 /* ChatLog.swift in Sources */,
 				1F8EF0531D52808E006BD185 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -259,9 +346,13 @@
 		};
 		1F8EF0621D52808E006BD185 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 106D52A46129FBAE9720F4BA /* Pods-bluchat.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				FRAMEWORK_SEARCH_PATHS = "~/Documents/FacebookSDK";
+				FRAMEWORK_SEARCH_PATHS = (
+					"~/Documents/FacebookSDK",
+					"$(inherited)",
+				);
 				INFOPLIST_FILE = bluchat/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Ham.bluchat;
@@ -271,9 +362,13 @@
 		};
 		1F8EF0631D52808E006BD185 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B600358B79F8119828254519 /* Pods-bluchat.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				FRAMEWORK_SEARCH_PATHS = "~/Documents/FacebookSDK";
+				FRAMEWORK_SEARCH_PATHS = (
+					"~/Documents/FacebookSDK",
+					"$(inherited)",
+				);
 				INFOPLIST_FILE = bluchat/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Ham.bluchat;
@@ -300,6 +395,7 @@
 				1F8EF0631D52808E006BD185 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
