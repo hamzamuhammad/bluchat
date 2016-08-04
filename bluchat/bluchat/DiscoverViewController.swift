@@ -69,10 +69,12 @@ class DiscoverViewController: UITableViewController, MPCManagerDelegate {
             if self.isAdvertising == true {
                 self.appDelegate.mpcManager.advertiser.stopAdvertisingPeer()
                 self.startStopAdvertisingButton.setTitle("Start Broadcasting", forState: .Normal)
+                self.isAdvertising = false
             }
             else {
                 self.appDelegate.mpcManager.advertiser.startAdvertisingPeer()
                 self.startStopAdvertisingButton.setTitle("Stop Broadcasting", forState: .Normal)
+                self.isAdvertising = true
             }
         })
         ac.addAction(visibilityAction)
@@ -131,6 +133,7 @@ class DiscoverViewController: UITableViewController, MPCManagerDelegate {
             self.performSegueWithIdentifier("StartChat", sender: self)
         }
     }
+    
     
 }
 

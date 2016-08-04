@@ -147,9 +147,6 @@
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="64"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
-                                <connections>
-                                    <segue destination="8ow-AC-Bor" kind="show" identifier="StartChat" id="KA4-bj-d46"/>
-                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -160,6 +157,7 @@
                     <tabBarItem key="tabBarItem" title="Discover" image="discoverIcon" id="Wm4-vK-RT8"/>
                     <connections>
                         <outlet property="startStopAdvertisingButton" destination="QRc-S4-EeQ" id="t5h-pI-9Qm"/>
+                        <segue destination="8ow-AC-Bor" kind="show" identifier="StartChat" id="xKr-bI-wsY"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Pcj-kv-uZr" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -190,6 +188,6 @@
         <image name="discoverIcon" width="32" height="32"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="KA4-bj-d46"/>
+        <segue reference="xKr-bI-wsY"/>
     </inferredMetricsTieBreakers>
 </document>

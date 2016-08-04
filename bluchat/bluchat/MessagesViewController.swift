@@ -9,6 +9,7 @@
 import UIKit
 import JSQMessagesViewController
 import syncano_ios
+import MultipeerConnectivity
 
 class MessagesViewController: JSQMessagesViewController {
     
@@ -24,6 +25,8 @@ class MessagesViewController: JSQMessagesViewController {
         }
     }
     
+    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -32,6 +35,14 @@ class MessagesViewController: JSQMessagesViewController {
         if (messages.count > 0) {
             loadMessages()
         }
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(MessagesViewController.handleMPCReceivedDataWithNotification), name: "receivedMPCDataNotification", object: nil)
+    }
+    
+    func handleMPCReceivedDataWithNotification(notification: NSNotification) {
+        let receivedMessage = notification.object as! JSQMessage
+        messages.append(receivedMessage)
+        reloadMessagesView()
+        // have to deal with a loss of connection somehow (switch to web messaging???)
     }
     
     override func didReceiveMemoryWarning() {
@@ -60,13 +71,19 @@ class MessagesViewController: JSQMessagesViewController {
     func setup() {
         senderId = UIDevice.currentDevice().identifierForVendor?.UUIDString
         senderDisplayName = UIDevice.currentDevice().identifierForVendor?.UUIDString
+        if let cl = chatLog {
+            chatLog = cl
+        }
+        else { // No chatlog was set, so its a new convo (how do we set this info??)
+            chatLog = ChatLog(recipientName: "hamza", lastMessageRecieved: "hi")
+        }
     }
     
     func loadMessages() {
         
-        for msg in messages {
-            messages.append(msg)
-        }
+//        for msg in messages {        THIS IS PROBABLY DOING THIS TWICE FOR NO REASON
+//            messages.append(msg)
+//        }
         reloadMessagesView()
     }
     
@@ -110,6 +127,8 @@ extension MessagesViewController {
         self.messages.append(message)
         self.finishSendingMessage()
         // We actually send the message here
+        
+        appDelegate.mpcManager.sendData(messageToSend: message, toPeer: appDelegate.mpcManager.session.connectedPeers[0] as MCPeerID)
     }
     
     override func didPressAccessoryButton(sender: UIButton!) {

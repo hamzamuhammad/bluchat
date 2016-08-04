@@ -8,6 +8,7 @@
 
 import UIKit
 import MultipeerConnectivity
+import JSQMessagesViewController
 
 protocol MPCManagerDelegate {
     func foundPeer()
@@ -68,7 +69,8 @@ class MPCManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
     }
     
     func session(session: MCSession, didReceiveData data: NSData, fromPeer peerID: MCPeerID) {
-        
+        let receivedMessage = NSKeyedUnarchiver.unarchiveObjectWithData(data) as! JSQMessage
+        NSNotificationCenter.defaultCenter().postNotificationName("receivedMPCDataNotifcation", object: receivedMessage)
     }
     
     func session(session: MCSession, didReceiveStream stream: NSInputStream, withName streamName: String, fromPeer peerID: MCPeerID) {
@@ -106,5 +108,20 @@ class MPCManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
     
     func advertiser(advertiser: MCNearbyServiceAdvertiser, didNotStartAdvertisingPeer error: NSError) {
         print(error.localizedDescription)
+    }
+    
+    // may have to fix this method
+    func sendData(messageToSend sentMsg: JSQMessage, toPeer targetPeer: MCPeerID) -> Bool {
+        let dataToSend = NSKeyedArchiver.archivedDataWithRootObject(sentMsg)
+        let peersArray = NSArray(object: targetPeer)
+        
+        do {
+            try session.sendData(dataToSend, toPeers: peersArray as! [MCPeerID], withMode: MCSessionSendDataMode.Reliable)
+        }
+        catch {
+            print("Error while sending data")
+        }
+        
+        return true
     }
 }
