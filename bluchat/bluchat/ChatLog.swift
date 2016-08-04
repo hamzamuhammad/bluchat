@@ -13,6 +13,7 @@ class ChatLog: NSObject {
     
     var recipientName: String
     var lastMessageReceived: String?
+    var lastMessageTime: String?
     var messages: [JSQMessage]
     
     init(recipientName: String, lastMessageRecieved: String?) {

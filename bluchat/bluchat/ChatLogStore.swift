@@ -19,4 +19,19 @@ class ChatLogStore {
             allChatLogs.append(chatLog)
         }
     }
+    
+    func removeChatLog(chatLog: ChatLog) {
+        if let index = allChatLogs.indexOf(chatLog) {
+            allChatLogs.removeAtIndex(index)
+        }
+    }
+    
+    func moveChatLogAtIndex(fromIndex: Int, toIndex: Int) {
+        if fromIndex == toIndex {
+            return
+        }
+        let movedChatLog = allChatLogs[fromIndex]
+        allChatLogs.removeAtIndex(fromIndex)
+        allChatLogs.insert(movedChatLog, atIndex: toIndex)
+    }
 }
