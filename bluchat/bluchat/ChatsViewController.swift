@@ -25,17 +25,6 @@ class ChatsViewController: UITableViewController {
 //        }
     }
     
-    @IBAction func toggleEditingMode(sender: AnyObject) {
-        if editing {
-            sender.setTitle("Edit", forState: .Normal)
-            setEditing(false, animated: true)
-        }
-        else {
-            sender.setTitle("Done", forState: .Normal)
-            setEditing(true, animated: true)
-        }
-    }
-    
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return chatLogStore.allChatLogs.count
     }
@@ -66,14 +55,6 @@ class ChatsViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // Get height of status bar
-        let statusBarHeight = UIApplication.sharedApplication().statusBarFrame.height
-        
-        let insets = UIEdgeInsets(top: statusBarHeight, left: 0, bottom: 0, right: 0)
-        tableView.contentInset = insets
-        tableView.scrollIndicatorInsets = insets
-        
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 65
     }
@@ -106,12 +87,21 @@ class ChatsViewController: UITableViewController {
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
         if segue.identifier == "ShowMessages" {
             if let row = tableView.indexPathForSelectedRow?.row {
+                
                 let chatLog = chatLogStore.allChatLogs[row]
+                
                 let messagesViewController = segue.destinationViewController as! MessagesViewController
-                messagesViewController.messages = chatLog //IMPORTANT TO FIX THIS PART HERE!
+                messagesViewController.chatLog = chatLog
             }
         }
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        
+        navigationItem.leftBarButtonItem = editButtonItem()
     }
 }

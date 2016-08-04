@@ -12,14 +12,15 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    let chatLogStore = ChatLogStore()
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         
-        // Create and set ChatLogStore
-        let chatLogStore = ChatLogStore()
-        let chatsViewController = window!.rootViewController as! ChatsViewController
+        // Set ChatLogStore
+        let navController = window!.rootViewController as! UINavigationController
+        let chatsViewController = navController.topViewController as! ChatsViewController
         chatsViewController.chatLogStore = chatLogStore
         
         
@@ -34,6 +35,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidEnterBackground(application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+        let success = chatLogStore.saveChanges()
+        if (success) {
+            print("Saved all of the chat logs")
+        }
+        else {
+            print("Could not save any of the chat logs")
+        }
     }
 
     func applicationWillEnterForeground(application: UIApplication) {

@@ -16,13 +16,22 @@ class MessagesViewController: JSQMessagesViewController {
     let incomingBubble = JSQMessagesBubbleImageFactory().incomingMessagesBubbleImageWithColor(UIColor(red: 10/255, green: 180/255, blue: 230/255, alpha: 1.0))
     let outgoingBubble = JSQMessagesBubbleImageFactory().outgoingMessagesBubbleImageWithColor(UIColor.lightGrayColor())
     
-    var messages = [JSQMessage]()
+    var messages: [JSQMessage]!
+    var chatLog: ChatLog! {
+        didSet {
+            navigationItem.title = chatLog.recipientName
+            messages = chatLog.messages
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Additional setup after view has loaded
+        
+        // Load old messages and setup chat
         self.setup()
-        self.addDemoMessages()
+        if (messages.count > 0) {
+            loadMessages()
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -33,25 +42,34 @@ class MessagesViewController: JSQMessagesViewController {
     func reloadMessagesView() {
         self.collectionView?.reloadData()
     }
-}
-
-//MARK - Setup
-extension MessagesViewController {
     
-    func addDemoMessages() {
-        for i in 1...10 {
-            let sender = (i%2 == 0) ? "Server" : self.senderId
-            let messageContent = "Message nr. \(i)"
-            let message = JSQMessage(senderId: sender, displayName: sender, text: messageContent)
-            self.messages += [message]
-        }
-        self.reloadMessagesView()
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        // Here, we 'save' changes to chatLog
+        
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        // tableView.reloadData()
+        reloadMessagesView()
     }
     
     func setup() {
-        self.senderId = UIDevice.currentDevice().identifierForVendor?.UUIDString
-        self.senderDisplayName = UIDevice.currentDevice().identifierForVendor?.UUIDString
+        senderId = UIDevice.currentDevice().identifierForVendor?.UUIDString
+        senderDisplayName = UIDevice.currentDevice().identifierForVendor?.UUIDString
     }
+    
+    func loadMessages() {
+        
+        for msg in messages {
+            messages.append(msg)
+        }
+        reloadMessagesView()
+    }
+    
 }
 
 //MARK - Data Source
@@ -89,11 +107,12 @@ extension MessagesViewController {
 extension MessagesViewController {
     override func didPressSendButton(button: UIButton!, withMessageText text: String!, senderId: String!, senderDisplayName: String!, date: NSDate!) {
         let message = JSQMessage(senderId: senderId, senderDisplayName: senderDisplayName, date: date, text: text)
-        self.messages += [message]
+        self.messages.append(message)
         self.finishSendingMessage()
+        // We actually send the message here
     }
     
     override func didPressAccessoryButton(sender: UIButton!) {
-        
+        // Ignore for now
     }
 }
