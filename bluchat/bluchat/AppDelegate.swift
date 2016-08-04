@@ -13,13 +13,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     let chatLogStore = ChatLogStore()
+    var mpcManager: MPCManager!
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         
+        mpcManager = MPCManager()
+        
         // Set ChatLogStore
-        let navController = window!.rootViewController as! UINavigationController
+        let tabBarController = window!.rootViewController as! UITabBarController
+        let navController = tabBarController.viewControllers![0] as! UINavigationController
         let chatsViewController = navController.topViewController as! ChatsViewController
         chatsViewController.chatLogStore = chatLogStore
         
