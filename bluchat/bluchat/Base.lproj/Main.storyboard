@@ -60,6 +60,7 @@
                                         </label>
                                     </subviews>
                                     <constraints>
+                                        <constraint firstItem="fRm-Wp-gsf" firstAttribute="top" secondItem="dp6-YG-oXq" secondAttribute="bottom" constant="9" id="6E9-YN-hVN"/>
                                         <constraint firstItem="fRm-Wp-gsf" firstAttribute="leading" secondItem="dp6-YG-oXq" secondAttribute="leading" id="6q1-hN-oZa"/>
                                         <constraint firstItem="VwR-b0-HYk" firstAttribute="centerY" secondItem="4zo-IR-c0W" secondAttribute="centerY" id="7ai-DH-N0b"/>
                                         <constraint firstItem="fRm-Wp-gsf" firstAttribute="bottom" secondItem="4zo-IR-c0W" secondAttribute="bottomMargin" id="Rbi-wA-cl0"/>
@@ -93,11 +94,11 @@
             </objects>
             <point key="canvasLocation" x="2327" y="486"/>
         </scene>
-        <!--Item-->
+        <!--Chat-->
         <scene sceneID="SSP-zl-VCB">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="PV1-Y0-zvW" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="8Zw-wY-cgV"/>
+                    <tabBarItem key="tabBarItem" title="Chat" image="chatIcon" id="8Zw-wY-cgV"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Ffu-LQ-BQc">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -112,6 +113,56 @@
             </objects>
             <point key="canvasLocation" x="1515" y="486"/>
         </scene>
+        <!--Discover-->
+        <scene sceneID="waZ-Cv-aOb">
+            <objects>
+                <tableViewController id="bw5-Nk-8RT" customClass="DiscoverViewController" customModule="bluchat" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="65" sectionHeaderHeight="28" sectionFooterHeight="28" id="Pp9-s7-cVs">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <view key="tableHeaderView" contentMode="scaleToFill" id="7u4-qo-hgW">
+                            <rect key="frame" x="0.0" y="0.0" width="600" height="60"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QRc-S4-EeQ">
+                                    <rect key="frame" x="277" y="15" width="46" height="30"/>
+                                    <state key="normal" title="Button"/>
+                                    <connections>
+                                        <action selector="startStopAdvertising:" destination="bw5-Nk-8RT" eventType="touchUpInside" id="yLv-4h-6NY"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstItem="QRc-S4-EeQ" firstAttribute="centerY" secondItem="7u4-qo-hgW" secondAttribute="centerY" id="Ka7-JT-6w3"/>
+                                <constraint firstItem="QRc-S4-EeQ" firstAttribute="centerX" secondItem="7u4-qo-hgW" secondAttribute="centerX" id="zrz-dN-Uw5"/>
+                            </constraints>
+                        </view>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="UITableViewCell" rowHeight="65" id="Pl5-Rt-e8m">
+                                <rect key="frame" x="0.0" y="88" width="600" height="65"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Pl5-Rt-e8m" id="zeW-uz-6mp">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="64"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="bw5-Nk-8RT" id="GG6-Sa-paR"/>
+                            <outlet property="delegate" destination="bw5-Nk-8RT" id="2yO-kw-wuL"/>
+                        </connections>
+                    </tableView>
+                    <tabBarItem key="tabBarItem" title="Discover" image="discoverIcon" id="Wm4-vK-RT8"/>
+                    <connections>
+                        <outlet property="startStopAdvertisingButton" destination="QRc-S4-EeQ" id="t5h-pI-9Qm"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Pcj-kv-uZr" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1515" y="-251"/>
+        </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="XoQ-AD-QrF">
             <objects>
@@ -123,6 +174,7 @@
                     </tabBar>
                     <connections>
                         <segue destination="PV1-Y0-zvW" kind="relationship" relationship="viewControllers" id="LeZ-Pl-BrQ"/>
+                        <segue destination="bw5-Nk-8RT" kind="relationship" relationship="viewControllers" id="aUT-Cw-rB6"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="z70-Yj-MG8" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -130,4 +182,8 @@
             <point key="canvasLocation" x="703" y="486"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="chatIcon" width="32" height="32"/>
+        <image name="discoverIcon" width="32" height="32"/>
+    </resources>
 </document>

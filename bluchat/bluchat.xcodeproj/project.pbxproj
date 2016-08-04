@@ -21,6 +21,7 @@
 		1F8EF0711D52A4E9006BD185 /* ChatLogStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8EF0701D52A4E9006BD185 /* ChatLogStore.swift */; };
 		1F8EF0731D52B80D006BD185 /* ChatLogCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8EF0721D52B80D006BD185 /* ChatLogCell.swift */; };
 		1F8EF0751D52E7A6006BD185 /* MPCManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8EF0741D52E7A6006BD185 /* MPCManager.swift */; };
+		1F8EF0771D530B85006BD185 /* DiscoverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8EF0761D530B85006BD185 /* DiscoverViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +41,7 @@
 		1F8EF0701D52A4E9006BD185 /* ChatLogStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatLogStore.swift; sourceTree = "<group>"; };
 		1F8EF0721D52B80D006BD185 /* ChatLogCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatLogCell.swift; sourceTree = "<group>"; };
 		1F8EF0741D52E7A6006BD185 /* MPCManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MPCManager.swift; sourceTree = "<group>"; };
+		1F8EF0761D530B85006BD185 /* DiscoverViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscoverViewController.swift; sourceTree = "<group>"; };
 		87CFB6DF15BEF529AE7D0F7B /* Pods_bluchat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_bluchat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B600358B79F8119828254519 /* Pods-bluchat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-bluchat.release.xcconfig"; path = "Pods/Target Support Files/Pods-bluchat/Pods-bluchat.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -94,6 +96,7 @@
 				1F8EF0521D52808E006BD185 /* AppDelegate.swift */,
 				1F8EF06A1D5298FF006BD185 /* ChatsViewController.swift */,
 				1F8EF06C1D529B4F006BD185 /* MessagesViewController.swift */,
+				1F8EF0761D530B85006BD185 /* DiscoverViewController.swift */,
 				1F8EF0561D52808E006BD185 /* Main.storyboard */,
 				1F8EF0721D52B80D006BD185 /* ChatLogCell.swift */,
 				1F8EF0701D52A4E9006BD185 /* ChatLogStore.swift */,
@@ -242,6 +245,7 @@
 				1F8EF06B1D5298FF006BD185 /* ChatsViewController.swift in Sources */,
 				1F8EF06F1D52A323006BD185 /* ChatLog.swift in Sources */,
 				1F8EF0751D52E7A6006BD185 /* MPCManager.swift in Sources */,
+				1F8EF0771D530B85006BD185 /* DiscoverViewController.swift in Sources */,
 				1F8EF0731D52B80D006BD185 /* ChatLogCell.swift in Sources */,
 				1F8EF0531D52808E006BD185 /* AppDelegate.swift in Sources */,
 			);
