@@ -27,7 +27,7 @@ class MPCManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
     var advertiser: MCNearbyServiceAdvertiser!
     
     var foundPeers = [MCPeerID]()
-    var invitationHandler: ((Bool, MCSession!)->Void)!
+    var invitationHandler: ((Bool, MCSession)->Void)?
     
     var delegate: MPCManagerDelegate?
     
@@ -84,11 +84,27 @@ class MPCManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
     }
     
     func session(session: MCSession, peer peerID: MCPeerID, didChangeState state: MCSessionState) {
+        switch state {
+        case MCSessionState.Connected:
+            print("Connected to session: \(session)")
+            delegate?.connectedWithPeer(peerID)
         
+        case MCSessionState.Connecting:
+            print("Connecting to session: \(session)")
+            
+        default:
+            print("Did not connect to session: \(session)")
+        }
     }
     
     func advertiser(advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: NSData?, invitationHandler: (Bool,
         MCSession) -> Void) {
+        self.invitationHandler = invitationHandler
         
+        delegate?.invitationWasReceived(peerID.displayName)
+    }
+    
+    func advertiser(advertiser: MCNearbyServiceAdvertiser, didNotStartAdvertisingPeer error: NSError) {
+        print(error.localizedDescription)
     }
 }

@@ -147,6 +147,9 @@
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="64"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <segue destination="8ow-AC-Bor" kind="show" identifier="StartChat" id="KA4-bj-d46"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -161,7 +164,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Pcj-kv-uZr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1515" y="-251"/>
+            <point key="canvasLocation" x="2327" y="-249"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="XoQ-AD-QrF">
@@ -186,4 +189,7 @@
         <image name="chatIcon" width="32" height="32"/>
         <image name="discoverIcon" width="32" height="32"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="KA4-bj-d46"/>
+    </inferredMetricsTieBreakers>
 </document>

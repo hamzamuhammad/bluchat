@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MultipeerConnectivity
 
 class DiscoverViewController: UITableViewController, MPCManagerDelegate {
     
@@ -35,6 +36,12 @@ class DiscoverViewController: UITableViewController, MPCManagerDelegate {
         startStopAdvertisingButton.setTitle("Stop Broadcasting", forState: .Normal)
     }
     
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        tableView.reloadData()
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -61,9 +68,11 @@ class DiscoverViewController: UITableViewController, MPCManagerDelegate {
             (action) -> Void in
             if self.isAdvertising == true {
                 self.appDelegate.mpcManager.advertiser.stopAdvertisingPeer()
+                self.startStopAdvertisingButton.setTitle("Start Broadcasting", forState: .Normal)
             }
             else {
                 self.appDelegate.mpcManager.advertiser.startAdvertisingPeer()
+                self.startStopAdvertisingButton.setTitle("Stop Broadcasting", forState: .Normal)
             }
         })
         ac.addAction(visibilityAction)
@@ -93,5 +102,52 @@ class DiscoverViewController: UITableViewController, MPCManagerDelegate {
         return cell
     }
     
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        let selectedPeer = appDelegate.mpcManager.foundPeers[indexPath.row] as MCPeerID
+        
+        appDelegate.mpcManager.browser.invitePeer(selectedPeer, toSession: appDelegate.mpcManager.session, withContext: nil, timeout: 20)
+    }
+    
+    func invitationWasReceived(fromPeer: String) {
+        let ac = UIAlertController(title: "", message: "\(fromPeer) wants to chat with you", preferredStyle: UIAlertControllerStyle.Alert)
+        
+        let acceptAction: UIAlertAction = UIAlertAction(title: "Accept", style: UIAlertActionStyle.Default) { (alertAction) -> Void in
+            self.appDelegate.mpcManager.invitationHandler!(true, self.appDelegate.mpcManager.session)
+        }
+        ac.addAction(acceptAction)
+        
+        let declineAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel) { (alertAction) -> Void in
+            self.appDelegate.mpcManager.invitationHandler!(false, self.appDelegate.mpcManager.session)
+        }
+        ac.addAction(declineAction)
+        
+        NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
+            self.presentViewController(ac, animated: true, completion: nil)
+        }
+    }
+    
+    func connectedWithPeer(peerID: MCPeerID) {
+        NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
+            self.performSegueWithIdentifier("StartChat", sender: self)
+        }
+    }
+    
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
