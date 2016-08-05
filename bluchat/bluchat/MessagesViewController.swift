@@ -30,25 +30,21 @@ class MessagesViewController: JSQMessagesViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Load old messages and setup chat
+        // Load old messages and setup public info
         self.setup()
         if (messages.count > 0) {
             loadMessages()
         }
+        // Notify if msg received and initially hide tab bar
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(MessagesViewController.handleMPCReceivedDataWithNotification), name: "receivedMPCDataNotification", object: nil)
-    }
-    
-    func goBackToChatsViewController() {
-        NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
-            self.performSegueWithIdentifier("GoBackToChats", sender: self)
-        }
+        self.tabBarController?.tabBar.hidden = true
     }
     
     func handleMPCReceivedDataWithNotification(notification: NSNotification) {
+        // Unpackage data stream and add to messages array
         let receivedMessage = notification.object as! JSQMessage
         messages.append(receivedMessage)
         reloadMessagesView()
-        // have to deal with a loss of connection somehow (switch to web messaging???)
     }
     
     override func didReceiveMemoryWarning() {
@@ -65,33 +61,23 @@ class MessagesViewController: JSQMessagesViewController {
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         
-        // Here, we 'save' changes to chatLog
-        
+        // Here, we 'save' changes to chatLog and hide tab bar to allow user to msg
+        self.tabBarController?.tabBar.hidden = false
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        // tableView.reloadData()
         reloadMessagesView()
     }
     
     func setup() {
+        // Set public info for phone -> may have to change when Facebook Button implemented
         senderId = UIDevice.currentDevice().identifierForVendor?.UUIDString
         senderDisplayName = UIDevice.currentDevice().identifierForVendor?.UUIDString
-        if let cl = chatLog {
-            chatLog = cl
-        }
-        else { // No chatlog was set, so its a new convo (how do we set this info??)
-            chatLog = ChatLog(recipientName: "hamza", lastMessageRecieved: "hi")
-        }
     }
     
     func loadMessages() {
-        
-//        for msg in messages {        THIS IS PROBABLY DOING THIS TWICE FOR NO REASON
-//            messages.append(msg)
-//        }
         reloadMessagesView()
     }
     
@@ -114,7 +100,10 @@ extension MessagesViewController {
     }
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, messageBubbleImageDataForItemAtIndexPath indexPath: NSIndexPath!) -> JSQMessageBubbleImageDataSource! {
+        
+        // For each msg, display differently if outgoing or incoming
         let data = messages[indexPath.row]
+        
         switch(data.senderId) {
         case self.senderId:
             return self.outgoingBubble
@@ -131,11 +120,15 @@ extension MessagesViewController {
 //MARK - Toolbar
 extension MessagesViewController {
     override func didPressSendButton(button: UIButton!, withMessageText text: String!, senderId: String!, senderDisplayName: String!, date: NSDate!) {
+        
+        // Create msg and add to messages array
         let message = JSQMessage(senderId: senderId, senderDisplayName: senderDisplayName, date: date, text: text)
+        
         self.messages.append(message)
         self.finishSendingMessage()
-        // We actually send the message here
         
+        // We actually send the message here
+        // Also note that we must change this if the peer is NOT connected -> have to connect through internet, then
         appDelegate.mpcManager.sendData(messageToSend: message, toPeer: appDelegate.mpcManager.session.connectedPeers[0] as MCPeerID)
     }
     
