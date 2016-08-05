@@ -51,7 +51,9 @@ class MessagesViewController: JSQMessagesViewController {
     }
     
     func reloadMessagesView() {
-        self.collectionView?.reloadData()
+        dispatch_async(dispatch_get_main_queue()){
+            self.collectionView?.reloadData()
+        }
     }
     
     override func viewWillDisappear(animated: Bool) {

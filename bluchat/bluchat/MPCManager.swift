@@ -70,7 +70,7 @@ class MPCManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
     
     func session(session: MCSession, didReceiveData data: NSData, fromPeer peerID: MCPeerID) {
         let receivedMessage = NSKeyedUnarchiver.unarchiveObjectWithData(data) as! JSQMessage
-        NSNotificationCenter.defaultCenter().postNotificationName("receivedMPCDataNotifcation", object: receivedMessage)
+        NSNotificationCenter.defaultCenter().postNotificationName("receivedMPCDataNotification", object: receivedMessage)
     }
     
     func session(session: MCSession, didReceiveStream stream: NSInputStream, withName streamName: String, fromPeer peerID: MCPeerID) {
