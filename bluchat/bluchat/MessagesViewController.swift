@@ -24,7 +24,7 @@ class MessagesViewController: JSQMessagesViewController {
             messages = chatLog.messages
         }
     }
-    
+        
     let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
     
     override func viewDidLoad() {
@@ -36,6 +36,12 @@ class MessagesViewController: JSQMessagesViewController {
             loadMessages()
         }
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(MessagesViewController.handleMPCReceivedDataWithNotification), name: "receivedMPCDataNotification", object: nil)
+    }
+    
+    func goBackToChatsViewController() {
+        NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
+            self.performSegueWithIdentifier("GoBackToChats", sender: self)
+        }
     }
     
     func handleMPCReceivedDataWithNotification(notification: NSNotification) {

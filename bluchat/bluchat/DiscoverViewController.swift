@@ -13,6 +13,7 @@ class DiscoverViewController: UITableViewController, MPCManagerDelegate {
     
     let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
     var isAdvertising: Bool!
+    var currentPeerID: MCPeerID?
     
     @IBOutlet var startStopAdvertisingButton: UIButton!
     
@@ -129,8 +130,24 @@ class DiscoverViewController: UITableViewController, MPCManagerDelegate {
     }
     
     func connectedWithPeer(peerID: MCPeerID) {
+        // Store peerID
+        currentPeerID = peerID
         NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
             self.performSegueWithIdentifier("StartChat", sender: self)
+        }
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    
+        if segue.identifier == "StartChat" {
+            // First, lets check if the chatlog already exists and if not we get back a fresh one:
+            let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+            let chatLog = appDelegate.chatLogStore.findChatLogWithRecipientName((currentPeerID?.displayName)!)
+            
+            // Now, go to new chat:
+            
+            let messagesViewController = segue.destinationViewController as! MessagesViewController
+            messagesViewController.chatLog = chatLog
         }
     }
     

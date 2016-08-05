@@ -37,6 +37,20 @@ class ChatLogStore {
         allChatLogs.insert(movedChatLog, atIndex: toIndex)
     }
     
+    func findChatLogWithRecipientName(recipientName: String) -> ChatLog {
+        
+        for chatLog in allChatLogs {
+            if chatLog.recipientName == recipientName {
+                return chatLog
+            }
+        }
+        
+        // Since we got here, we have to make a new chatlog with this info:
+        let newChatLog = ChatLog(recipientName: recipientName, lastMessageRecieved: nil)
+        allChatLogs.append(newChatLog)
+        return newChatLog
+    }
+    
     init() {
         if let archivedItems = NSKeyedUnarchiver.unarchiveObjectWithFile(chatLogArchiveURL.path!) as? [ChatLog] {
             allChatLogs += archivedItems
