@@ -7,10 +7,13 @@
 //
 
 import UIKit
+import syncano_ios
 
 class ChatsViewController: UITableViewController {
     
     var chatLogStore: ChatLogStore!
+    
+
     
     @IBAction func newChat(sender: AnyObject) {
         // Have to have drill down interface to a contacts list of users...
@@ -56,6 +59,7 @@ class ChatsViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 65
     }
@@ -96,6 +100,7 @@ class ChatsViewController: UITableViewController {
                 
                 let messagesViewController = segue.destinationViewController as! MessagesViewController
                 messagesViewController.chatLog = chatLog
+                messagesViewController.cameFromDiscover = false
             }
         }
     }
@@ -112,3 +117,28 @@ class ChatsViewController: UITableViewController {
         navigationItem.leftBarButtonItem = editButtonItem()
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

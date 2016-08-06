@@ -163,6 +163,54 @@
             </objects>
             <point key="canvasLocation" x="2327" y="-270"/>
         </scene>
+        <!--Login View Controller-->
+        <scene sceneID="0zg-0F-o9M">
+            <objects>
+                <viewController storyboardIdentifier="LoginViewController" id="Gqd-Ty-CXF" customClass="LoginViewController" customModule="bluchat" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="dxd-fA-Sbh"/>
+                        <viewControllerLayoutGuide type="bottom" id="c73-qh-Y3R"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="nwV-1m-z03">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="azW-Hd-nhG">
+                                <rect key="frame" x="252" y="28" width="97" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="s8f-L4-WZ8">
+                                <rect key="frame" x="252" y="66" width="97" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xIY-WS-mE5">
+                                <rect key="frame" x="281" y="104" width="38" height="30"/>
+                                <state key="normal" title="Login"/>
+                                <connections>
+                                    <action selector="loginPressed:" destination="Gqd-Ty-CXF" eventType="touchUpInside" id="KM5-Yv-fWK"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Wv-ZT-Voj">
+                                <rect key="frame" x="274" y="142" width="52" height="30"/>
+                                <state key="normal" title="Sign up"/>
+                                <connections>
+                                    <action selector="signUpPressed:" destination="Gqd-Ty-CXF" eventType="touchUpInside" id="dKB-la-jBZ"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <connections>
+                        <outlet property="emailTextField" destination="azW-Hd-nhG" id="q6N-fw-ufY"/>
+                        <outlet property="passwordTextField" destination="s8f-L4-WZ8" id="cPd-fb-386"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bsn-H5-slt" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="703" y="-230"/>
+        </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="XoQ-AD-QrF">
             <objects>

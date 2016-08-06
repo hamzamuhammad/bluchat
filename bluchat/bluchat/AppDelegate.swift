@@ -7,6 +7,9 @@
 //
 
 import UIKit
+import CoreData
+import syncano_ios
+import IQKeyboardManagerSwift
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -18,6 +21,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        
+        Syncano.sharedInstanceWithApiKey(syncanoApiKey, instanceName: syncanoInstanceName)
+        IQKeyboardManager.sharedManager().enable = true
+        IQKeyboardManager.sharedManager().shouldResignOnTouchOutside = true
         
         mpcManager = MPCManager()
         

@@ -143,6 +143,7 @@ class DiscoverViewController: UITableViewController, MPCManagerDelegate {
             // Now, go to new chat:
             let messagesViewController = segue.destinationViewController as! MessagesViewController
             messagesViewController.chatLog = chatLog
+            messagesViewController.cameFromDiscover = true
         }
     }
     
