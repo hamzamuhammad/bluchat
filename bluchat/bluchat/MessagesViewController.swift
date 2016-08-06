@@ -27,13 +27,20 @@ class MessagesViewController: JSQMessagesViewController {
         
     let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
     
+    let dateFormatter: NSDateFormatter = {
+        let formatter = NSDateFormatter()
+        formatter.dateStyle = .MediumStyle
+        formatter.timeStyle = .NoStyle
+        return formatter
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // Load old messages and setup public info
         self.setup()
         if (messages.count > 0) {
-            loadMessages()
+            reloadMessagesView()
         }
         // Notify if msg received and initially hide tab bar
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(MessagesViewController.handleMPCReceivedDataWithNotification), name: "receivedMPCDataNotification", object: nil)
@@ -61,12 +68,15 @@ class MessagesViewController: JSQMessagesViewController {
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         
-        // Here, we 'save' changes to chatLog and hide tab bar to allow user to msg
+        // Have to implement the web based method here
+        
         self.tabBarController?.tabBar.hidden = false
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        
+        // Have to implement the web based method here
         
         reloadMessagesView()
     }
@@ -76,11 +86,6 @@ class MessagesViewController: JSQMessagesViewController {
         senderId = UIDevice.currentDevice().identifierForVendor?.UUIDString
         senderDisplayName = UIDevice.currentDevice().identifierForVendor?.UUIDString
     }
-    
-    func loadMessages() {
-        reloadMessagesView()
-    }
-    
 }
 
 //MARK - Data Source

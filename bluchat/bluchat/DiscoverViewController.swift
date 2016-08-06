@@ -19,10 +19,7 @@ class DiscoverViewController: UITableViewController, MPCManagerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        
-        // Have to load data we get from MPC here
-        
+        // Do any additional setup after loading the view, typically from a nib
         
         // Get height of status bar and make sure cells dont overlap status bar
         let statusBarHeight = UIApplication.sharedApplication().statusBarFrame.height
@@ -140,12 +137,10 @@ class DiscoverViewController: UITableViewController, MPCManagerDelegate {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
     
         if segue.identifier == "StartChat" {
-            // First, lets check if the chatlog already exists and if not we get back a fresh one:
-            let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-            let chatLog = appDelegate.chatLogStore.findChatLogWithRecipientName((currentPeerID?.displayName)!)
+            // First, make a temporary chat
+            let chatLog = ChatLog(recipientName: (currentPeerID?.displayName)!, lastMessageRecieved: nil)
             
             // Now, go to new chat:
-            
             let messagesViewController = segue.destinationViewController as! MessagesViewController
             messagesViewController.chatLog = chatLog
         }

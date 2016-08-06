@@ -45,7 +45,8 @@ class ChatsViewController: UITableViewController {
             cell.lastMessageReceivedLabel.text = ""
         }
         if let time = chatLog.lastMessageTime {
-            cell.lastMessageTimeLabel.text = time        }
+            cell.lastMessageTimeLabel.text = time
+        }
         else {
             cell.lastMessageTimeLabel.text = ""
         }
