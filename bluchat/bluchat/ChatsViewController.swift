@@ -12,9 +12,19 @@ import CoreData
 
 class ChatsViewController: UITableViewController {
     
-    var coreDataStack: CoreDataStack!
+    // Reference to appDelegate
+    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
     
+    // Main data source
     var chatLogStore: [ChatLog]!
+    
+    // Format an NSDate object
+    let dateFormatter: NSDateFormatter = {
+        let formatter = NSDateFormatter()
+        formatter.dateStyle = .MediumStyle
+        formatter.timeStyle = .NoStyle
+        return formatter
+    }()
     
     @IBAction func newChat(sender: AnyObject) {
         // Have to have drill down interface to a contacts list of users...
@@ -43,7 +53,7 @@ class ChatsViewController: UITableViewController {
         
         cell.recipientNameLabel.text = chatLog.recipientName
         cell.lastMessageReceivedLabel.text = chatLog.lastMessageReceived
-        cell.lastMessageTimeLabel.text = chatLog.lastMessageTime
+        cell.lastMessageTimeLabel.text = dateFormatter.stringFromDate(chatLog.lastMessageTime)
         
         return cell
     }
@@ -53,6 +63,8 @@ class ChatsViewController: UITableViewController {
         
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 65
+        
+        loadChatLogs()
     }
     
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
@@ -89,8 +101,8 @@ class ChatsViewController: UITableViewController {
             if let row = tableView.indexPathForSelectedRow?.row {
                 
                 
-                // Here, we get the required messages from a chatLogID
-                let chatLogID = chatLogStore[row].chatLogID
+                // Here, we get the required messages from a ChatLog obj
+                let chatLog = chatLogStore[row]
                 
                 let messagesViewController = segue.destinationViewController as! MessagesViewController
                 messagesViewController.chatLog = chatLog
@@ -141,7 +153,7 @@ class ChatsViewController: UITableViewController {
     
     func saveChatLogChanges() {
         
-        let mainQueueContext = self.coreDataStack.mainQueueContext
+        let mainQueueContext = appDelegate.coreDataStack.mainQueueContext
         mainQueueContext.performBlockAndWait() {
             try! mainQueueContext.obtainPermanentIDsForObjects(self.chatLogStore)
         }
@@ -150,7 +162,7 @@ class ChatsViewController: UITableViewController {
         let sortByDateReceived = NSSortDescriptor(key: "lastMessageTime", ascending: true)
         
         do {
-            try self.coreDataStack.saveChanges()
+            try appDelegate.coreDataStack.saveChanges()
             
             try self.fetchMainQueueChatLogs(predicate: predicate, sortDescriptors: [sortByDateReceived])
             //result = .Success(mainQueueChatLogs)
@@ -167,7 +179,7 @@ class ChatsViewController: UITableViewController {
         fetchRequest.sortDescriptors = sortDescriptors
         fetchRequest.predicate = predicate
         
-        let mainQueueContext = self.coreDataStack.mainQueueContext
+        let mainQueueContext = appDelegate.coreDataStack.mainQueueContext
         var mainQueueChatLogs: [ChatLog]?
         var fetchRequestError: ErrorType?
         mainQueueContext.performBlockAndWait() {
@@ -187,7 +199,7 @@ class ChatsViewController: UITableViewController {
     }
     
     //put this shit in viewdidload
-    func temp() {
+    func loadChatLogs() {
         let sortByDateTaken = NSSortDescriptor(key: "lastMessageTime", ascending: true)
         let allChatLogs = try! self.fetchMainQueueChatLogs(predicate: nil, sortDescriptors: [sortByDateTaken])
         

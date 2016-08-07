@@ -21,7 +21,7 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate {
         if (FBSDKAccessToken.currentAccessToken() != nil)
         {
             NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
-                self.performSegueWithIdentifier("StartChat", sender: self)
+                self.performSegueWithIdentifier("ShowMain", sender: self)
             }
         }
         else
@@ -57,7 +57,9 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate {
             // should check if specific permissions missing
             if result.grantedPermissions.contains("email") && result.grantedPermissions.contains("public_profile")
             {
-            
+                NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
+                    self.performSegueWithIdentifier("ShowMain", sender: self)
+                }
             }
         }
     }
@@ -89,7 +91,7 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate {
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
-        if segue.identifier == "StartMain" {
+        if segue.identifier == "ShowMain" {
             //let chatLogStore = nil // FIX THIS PART TO GET CHATSTORE FROM CORE DATA
             
             let tabBarController = segue.destinationViewController as! UITabBarController
@@ -101,7 +103,6 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate {
             
         }
     }
-    
     
     
     

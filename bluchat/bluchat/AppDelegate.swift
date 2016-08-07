@@ -8,6 +8,7 @@
 
 import UIKit
 import syncano_ios
+import CoreData
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {

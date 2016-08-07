@@ -17,27 +17,28 @@ class MessagesViewController: JSQMessagesViewController {
     // Set up backend object connections
     let channel = SCChannel(name: syncanoChannelName)
     
+    // Get global appdelegate object
+    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+    
     // Define GUI for incoming and outgoing messages
     let incomingBubble = JSQMessagesBubbleImageFactory().incomingMessagesBubbleImageWithColor(UIColor.lightGrayColor())
     let outgoingBubble = JSQMessagesBubbleImageFactory().outgoingMessagesBubbleImageWithColor(UIColor(red: 10/255, green: 180/255, blue: 230/255, alpha: 1.0))
     
+    // What JSQMessagesViewController needs to display messages
     var messages: [JSQMessage]!
+    
+    // What core data needs to successfully archive
+    var chatMessages: [ChatMessage]!
+    
+    // Details regarding an existing chatlog
     var chatLog: ChatLog! {
         didSet {
             navigationItem.title = chatLog.recipientName
         }
     }
+
+    // Check whether chat originated from discover tab
     var cameFromDiscover: Bool?
-        
-    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-    let dateFormatter: NSDateFormatter = {
-        let formatter = NSDateFormatter()
-        formatter.dateStyle = .MediumStyle
-        formatter.timeStyle = .NoStyle
-        return formatter
-    }()
-    
-    var chatMessages: [ChatMessage]!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,16 +57,20 @@ class MessagesViewController: JSQMessagesViewController {
             NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(MessagesViewController.handleMPCReceivedDataWithNotification), name: "receivedMPCDataNotification", object: nil)
         }
         else {
+            // Otherwise, get messages from syncano backend
             self.downloadNewestMessagesFromSyncano()
         }
         
+        // Fix the JSQmessage alignment
         self.collectionView.collectionViewLayout.incomingAvatarViewSize = CGSizeZero
         self.collectionView.collectionViewLayout.outgoingAvatarViewSize = CGSizeZero
+        
+        // Make the keyboard input visible
         self.tabBarController?.tabBar.hidden = true
     }
     
     func handleMPCReceivedDataWithNotification(notification: NSNotification) {
-        // Unpackage data stream and add to messages array
+        // Unpackage data stream and add to messages array, reload view
         let receivedMessage = notification.object as! JSQMessage
         messages.append(receivedMessage)
         reloadMessagesView()
@@ -85,18 +90,19 @@ class MessagesViewController: JSQMessagesViewController {
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         
-        // Have to save these messages?
+        // If not an MPC connection, save messages to core data
         if (cameFromDiscover == false) {
             saveChatMessageChanges()
         }
         
+        // Unhide the tab bar below
         self.tabBarController?.tabBar.hidden = false
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        // Have to load messages?
+        // Load saved messages from core data, and package them for JSQMessagesViewController
         if (cameFromDiscover == false) {
             loadChatMessages()
             convertChatMessageToJSQMessage()
@@ -128,6 +134,9 @@ class MessagesViewController: JSQMessagesViewController {
         if (cameFromDiscover == true) {
             senderId = UIDevice.currentDevice().identifierForVendor?.UUIDString
             senderDisplayName = UIDevice.currentDevice().identifierForVendor?.UUIDString
+            let peerID = appDelegate.mpcManager.session.connectedPeers[0]
+            navigationItem.title = peerID.displayName
+            messages = [JSQMessage]()
         }
         else {
             channel.delegate = self
@@ -172,25 +181,26 @@ extension MessagesViewController {
         return nil
     }
     
-    override func collectionView(collectionView: JSQMessagesCollectionView!, attributedTextForMessageBubbleTopLabelAtIndexPath indexPath: NSIndexPath!) -> NSAttributedString! {
-        
-        let data = self.collectionView(self.collectionView, messageDataForItemAtIndexPath: indexPath)
-        
-        if (self.senderDisplayName == data.senderDisplayName()) {
-            return nil
-        }
-        return NSAttributedString(string: data.senderDisplayName())
-    }
-    
-    override func collectionView(collectionView: JSQMessagesCollectionView!, layout collectionViewLayout: JSQMessagesCollectionViewFlowLayout!, heightForMessageBubbleTopLabelAtIndexPath indexPath: NSIndexPath!) -> CGFloat {
-        
-        let data = self.collectionView(self.collectionView, messageDataForItemAtIndexPath: indexPath)
-        
-        if (self.senderDisplayName == data.senderDisplayName()) {
-            return 0.0
-        }
-        return kJSQMessagesCollectionViewCellLabelHeightDefault
-    }
+//      USEFUL CODE FOR GROUP CHATS; LABELS EACH MESSAGE WITH WHOEVER IS MESSAGING FROM IT
+//    override func collectionView(collectionView: JSQMessagesCollectionView!, attributedTextForMessageBubbleTopLabelAtIndexPath indexPath: NSIndexPath!) -> NSAttributedString! {
+//        
+//        let data = self.collectionView(self.collectionView, messageDataForItemAtIndexPath: indexPath)
+//        
+//        if (self.senderDisplayName == data.senderDisplayName()) {
+//            return nil
+//        }
+//        return NSAttributedString(string: data.senderDisplayName())
+//    }
+//    
+//    override func collectionView(collectionView: JSQMessagesCollectionView!, layout collectionViewLayout: JSQMessagesCollectionViewFlowLayout!, heightForMessageBubbleTopLabelAtIndexPath indexPath: NSIndexPath!) -> CGFloat {
+//        
+//        let data = self.collectionView(self.collectionView, messageDataForItemAtIndexPath: indexPath)
+//        
+//        if (self.senderDisplayName == data.senderDisplayName()) {
+//            return 0.0
+//        }
+//        return kJSQMessagesCollectionViewCellLabelHeightDefault
+//    }
 }
 
 //MARK - Toolbar
@@ -198,12 +208,13 @@ extension MessagesViewController {
     override func didPressSendButton(button: UIButton!, withMessageText text: String!, senderId: String!, senderDisplayName: String!, date: NSDate!) {
         
         // Create msg and add to messages array
-        // We also need an extra argument here
         let message = JSQMessage(senderId: senderId, senderDisplayName: senderDisplayName, date: date, text: text)
         
-        // Add to core data
-        let messageID = chatLog.chatLogID
-        storeMessage(message.senderId, senderDisplayName: message.senderId, date: message.date!, text: message.text, messageID: messageID, inContext: self.appDelegate.coreDataStack.mainQueueContext)
+        // Add to core data if not a bluetooth message
+        if cameFromDiscover == false {
+            let messageID = chatLog.chatLogID
+            storeMessage(message.senderId, senderDisplayName: message.senderId, date: message.date!, text: message.text, messageID: messageID, inContext: self.appDelegate.coreDataStack.mainQueueContext)
+        }
         
         self.messages.append(message)
  
@@ -238,7 +249,7 @@ extension MessagesViewController {
         
         messageToSend.saveWithCompletionBlock { error in
             if (error != nil) {
-                // ERror handling
+                // Error handling
             }
         }
     }
@@ -256,17 +267,6 @@ extension MessagesViewController {
         }
     }
     
-    func jsqMessageFromSyncanoMessage(message: Message) -> JSQMessage {
-        // Where we put additional argument (entity type)
-        let jsqMessage = JSQMessage(senderId: message.senderId, senderDisplayName: message.senderId, date: message.created_at, text: message.text)
-        
-        // Add to core data
-        let messageID = chatLog.chatLogID
-        storeMessage(message.senderId, senderDisplayName: message.senderId, date: message.created_at!, text: message.text, messageID: messageID, inContext: self.appDelegate.coreDataStack.mainQueueContext)
-        
-        return jsqMessage
-    }
-    
     func jsqMessagesFromSyncanoMessages(messages: [Message]) -> [JSQMessage] {
         var jsqMessages: [JSQMessage] = []
         
@@ -278,6 +278,17 @@ extension MessagesViewController {
         }
         
         return jsqMessages
+    }
+    
+    func jsqMessageFromSyncanoMessage(message: Message) -> JSQMessage {
+
+        let jsqMessage = JSQMessage(senderId: message.senderId, senderDisplayName: message.senderId, date: message.created_at, text: message.text)
+        
+        // Add to core data
+        let messageID = chatLog.chatLogID
+        storeMessage(message.senderId, senderDisplayName: message.senderId, date: message.created_at!, text: message.text, messageID: messageID, inContext: self.appDelegate.coreDataStack.mainQueueContext)
+        
+        return jsqMessage
     }
 }
 

@@ -137,12 +137,9 @@ class DiscoverViewController: UITableViewController, MPCManagerDelegate {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
     
         if segue.identifier == "StartChat" {
-            // First, make a temporary chat
-            let chatLog = ChatLog(entity: (currentPeerID?.displayName)!, insertIntoManagedObjectContext: nil)
             
             // Now, go to new chat:
             let messagesViewController = segue.destinationViewController as! MessagesViewController
-            messagesViewController.chatLog = chatLog
             messagesViewController.cameFromDiscover = true
         }
     }
