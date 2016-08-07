@@ -7,9 +7,7 @@
 //
 
 import UIKit
-import CoreData
 import syncano_ios
-import IQKeyboardManagerSwift
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -17,25 +15,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     let chatLogStore = ChatLogStore()
     var mpcManager: MPCManager!
-
-
+    
+    func application(application: UIApplication,
+                     openURL url: NSURL,
+                             sourceApplication: String?,
+                             annotation: AnyObject) -> Bool {
+        return FBSDKApplicationDelegate.sharedInstance().application(
+            application,
+            openURL: url,
+            sourceApplication: sourceApplication,
+            annotation: annotation)
+    }
+    
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         
         Syncano.sharedInstanceWithApiKey(syncanoApiKey, instanceName: syncanoInstanceName)
-        IQKeyboardManager.sharedManager().enable = true
-        IQKeyboardManager.sharedManager().shouldResignOnTouchOutside = true
         
         mpcManager = MPCManager()
         
         // Set ChatLogStore
-        let tabBarController = window!.rootViewController as! UITabBarController
-        let navController = tabBarController.viewControllers![0] as! UINavigationController
-        let chatsViewController = navController.topViewController as! ChatsViewController
-        chatsViewController.chatLogStore = chatLogStore
+//        let tabBarController = window!.rootViewController as! UITabBarController
+//        let navController = tabBarController.viewControllers![0] as! UINavigationController
+//        let chatsViewController = navController.topViewController as! ChatsViewController
+//        chatsViewController.chatLogStore = chatLogStore
         
-        
-        return true
+        return FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
     }
 
     func applicationWillResignActive(application: UIApplication) {

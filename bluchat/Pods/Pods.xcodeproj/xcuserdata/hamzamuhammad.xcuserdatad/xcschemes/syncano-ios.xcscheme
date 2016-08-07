@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "359BD6D7AD5CB9048EB1952A96B2A80D"
+               BlueprintIdentifier = "AAF73246E75B112DA8B1D2BCBB3C56A7"
                BuildableName = "syncano_ios.framework"
                BlueprintName = "syncano-ios"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -45,7 +45,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "359BD6D7AD5CB9048EB1952A96B2A80D"
+            BlueprintIdentifier = "AAF73246E75B112DA8B1D2BCBB3C56A7"
             BuildableName = "syncano_ios.framework"
             BlueprintName = "syncano-ios"
             ReferencedContainer = "container:Pods.xcodeproj">

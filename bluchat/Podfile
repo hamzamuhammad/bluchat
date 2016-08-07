@@ -8,6 +8,5 @@ target 'bluchat' do
   # Pods for bluchat
   pod 'syncano-ios'
   pod 'JSQMessagesViewController'
-  pod 'IQKeyboardManagerSwift'
 
 end

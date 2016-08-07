@@ -13,8 +13,6 @@ class ChatsViewController: UITableViewController {
     
     var chatLogStore: ChatLogStore!
     
-
-    
     @IBAction func newChat(sender: AnyObject) {
         // Have to have drill down interface to a contacts list of users...
         // For now, just add a new chat to the table
@@ -117,6 +115,8 @@ class ChatsViewController: UITableViewController {
         navigationItem.leftBarButtonItem = editButtonItem()
     }
 }
+
+
 
 
 

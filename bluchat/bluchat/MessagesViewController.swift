@@ -36,7 +36,6 @@ class MessagesViewController: JSQMessagesViewController {
         formatter.timeStyle = .NoStyle
         return formatter
     }()
-    let loginViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier(loginViewControllerIdentifier) as! LoginViewController
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,12 +52,6 @@ class MessagesViewController: JSQMessagesViewController {
         }
         
         self.tabBarController?.tabBar.hidden = true
-    }
-    
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        // Check if user logged in or not
-        self.showLoginViewControllerIfNotLoggedIn()
     }
     
     func handleMPCReceivedDataWithNotification(notification: NSNotification) {
@@ -82,7 +75,7 @@ class MessagesViewController: JSQMessagesViewController {
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         
-        // Have to implement the web based method here
+        // Have to save these messages?
         
         self.tabBarController?.tabBar.hidden = false
     }
@@ -90,7 +83,7 @@ class MessagesViewController: JSQMessagesViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        // Have to implement the web based method here
+        // Have to load messages?
         
         reloadMessagesView()
     }
@@ -100,10 +93,7 @@ class MessagesViewController: JSQMessagesViewController {
         self.reloadMessagesView()
         self.downloadNewestMessagesFromSyncano()
     }
-}
-
-//MARK - Setup
-extension MessagesViewController {
+    
     func setup() {
         // Set public info for phone -> may have to change when Facebook Button implemented
         if (cameFromDiscover == true) {
@@ -111,17 +101,12 @@ extension MessagesViewController {
             senderDisplayName = UIDevice.currentDevice().identifierForVendor?.UUIDString
         }
         else {
-            self.setupSenderData()
-            self.channel.delegate = self
-            self.channel.subscribeToChannel()
-            self.loginViewController.delegate = self
+            channel.delegate = self
+            channel.subscribeToChannel()
+            // set up user info from facebook login details
+            senderId = ""
+            senderDisplayName = ""
         }
-    }
-    
-    func setupSenderData() {
-        let sender = (SCUser.currentUser() != nil) ? SCUser.currentUser()!.username : ""
-        self.senderId = sender
-        self.senderDisplayName = sender
     }
 }
 
@@ -218,7 +203,6 @@ extension MessagesViewController {
                 // ERror handling
             }
         }
-        
     }
     
     func downloadNewestMessagesFromSyncano() {
@@ -255,11 +239,14 @@ extension MessagesViewController {
 extension MessagesViewController: SCChannelDelegate {
     
     func addMessageFromNotification(notification: SCChannelNotificationMessage) {
+        
         let message = Message(fromDictionary: notification.payload!)
+        
         if message!.senderId == self.senderId {
             //dont need own msg
             return
         }
+        
         self.messages.append(self.jsqMessageFromSyncanoMessage(message!))
         self.finishReceivingMessage()
     }
@@ -273,6 +260,7 @@ extension MessagesViewController: SCChannelDelegate {
     }
     
     func channelDidReceiveNotificationMessage(notificationMessage: SCChannelNotificationMessage) {
+        
         switch(notificationMessage.action) {
         case .Create:
             self.addMessageFromNotification(notificationMessage)
@@ -285,58 +273,6 @@ extension MessagesViewController: SCChannelDelegate {
         }
     }
 }
-
-//MARK - Login Logic
-extension MessagesViewController : LoginDelegate {
-    func didSignUp() {
-        self.prepareAppForNewUser()
-        self.hideLoginViewController()
-        
-    }
-    
-    func didLogin() {
-        self.prepareAppForNewUser()
-        self.hideLoginViewController()
-    }
-    
-    func prepareAppForNewUser() {
-        self.setupSenderData()
-        self.reloadAllMessages()
-    }
-    
-    func isLoggedIn() -> Bool {
-        let isLoggedIn = (SCUser.currentUser() != nil)
-        return isLoggedIn
-    }
-    
-    func logout() {
-        SCUser.currentUser()?.logout()
-    }
-    
-    func showLoginViewController() {
-        self.presentViewController(self.loginViewController, animated: true) {
-            
-        }
-    }
-    
-    func hideLoginViewController() {
-        self.dismissViewControllerAnimated(true) {
-            
-        }
-    }
-    
-    func showLoginViewControllerIfNotLoggedIn() {
-        if (self.isLoggedIn() == false) {
-            self.showLoginViewController()
-        }
-    }
-    
-    @IBAction func logoutPressed(sender: UIBarButtonItem) {
-        self.logout()
-        self.showLoginViewControllerIfNotLoggedIn()
-    }
-}
-
 
 
 

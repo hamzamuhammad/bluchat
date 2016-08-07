@@ -7,86 +7,78 @@
 //
 
 import UIKit
-import syncano_ios
 
-let loginViewControllerIdentifier = "LoginViewController"
-
-protocol LoginDelegate {
-    func didSignUp()
-    func didLogin()
-}
-
-class LoginViewController: UIViewController {
-    @IBOutlet weak var emailTextField: UITextField!
-    @IBOutlet weak var passwordTextField: UITextField!
+class LoginViewController: UIViewController, FBSDKLoginButtonDelegate {
+    // This class will login user into facebook!
     
-    var delegate: LoginDelegate?
-}
-
-//MARK - UI
-extension LoginViewController {
-    @IBAction func loginPressed(sender: UIButton) {
-        if self.areBothUsernameAndPasswordFilled() {
-            self.login(self.getUsername()!, password: self.getPassword()!, finished: { error in
-                if (error != nil) {
-                    //handle error
-                    print("Login, error: \(error)")
-                } else {
-                    self.cleanTextFields()
-                    self.delegate?.didLogin()
-                }
-            })
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // Do any additional setup after loading the view, typically from a nib.
+        
+        if (FBSDKAccessToken.currentAccessToken() != nil)
+        {
+            // User is already logged in, do work such as go to next view controller.
         }
-    }
-    
-    @IBAction func signUpPressed(sender: UIButton) {
-        if self.areBothUsernameAndPasswordFilled() {
-            self.signUp(self.getUsername()!, password: self.getPassword()!, finished: { error in
-                if (error != nil) {
-                    //handle error
-                    print("Sign Up, error: \(error)")
-                } else {
-                    self.cleanTextFields()
-                    self.delegate?.didSignUp()
-                }
-            })
+        else
+        {
+            let loginView : FBSDKLoginButton = FBSDKLoginButton()
+            self.view.addSubview(loginView)
+            loginView.center = self.view.center
+            loginView.readPermissions = ["public_profile", "email", "user_friends"]
+            loginView.delegate = self
         }
+        
     }
     
-    func getUsername() -> String? {
-        return self.emailTextField.text
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
     }
     
-    func getPassword() -> String? {
-        return self.passwordTextField.text
-    }
+    // Facebook Delegate Methods
     
-    func areBothUsernameAndPasswordFilled() -> Bool {
-        if let username = self.emailTextField.text, password = self.passwordTextField.text {
-            if (username.characters.count > 0 && password.characters.count > 0) {
-                return true
+    func loginButton(loginButton: FBSDKLoginButton!, didCompleteWithResult result: FBSDKLoginManagerLoginResult!, error: NSError!) {
+        print("User Logged In")
+        
+        if ((error) != nil)
+        {
+            // Process error
+        }
+        else if result.isCancelled {
+            // Handle cancellations
+        }
+        else {
+            // If you ask for multiple permissions at once, you
+            // should check if specific permissions missing
+            if result.grantedPermissions.contains("email")
+            {
+                // Do work
             }
         }
-        return false
     }
     
-    func cleanTextFields() {
-        self.emailTextField.text = nil
-        self.passwordTextField.text = nil
-    }
-}
-
-//MARK - Syncano
-extension LoginViewController {
-    func login(username: String, password: String, finished: (NSError!) -> ()) {
-        SCUser.loginWithUsername(username, password: password) { error in
-            finished(error)
-        }
+    func loginButtonDidLogOut(loginButton: FBSDKLoginButton!) {
+        print("User Logged Out")
     }
     
-    func signUp(username: String, password: String, finished: (NSError!) -> ()) {
-        SCUser.registerWithUsername(username, password: password) { error in
-            finished(error)
-        }
+    func returnUserData()
+    {
+        let graphRequest : FBSDKGraphRequest = FBSDKGraphRequest(graphPath: "me", parameters: nil)
+        graphRequest.startWithCompletionHandler({ (connection, result, error) -> Void in
+            
+            if ((error) != nil)
+            {
+                // Process error
+                print("Error: \(error)")
+            }
+            else
+            {
+                print("fetched user: \(result)")
+                let userName : NSString = result.valueForKey("name") as! NSString
+                print("User Name is: \(userName)")
+                let userEmail : NSString = result.valueForKey("email") as! NSString
+                print("User Email is: \(userEmail)")
+            }
+        })
     }
 }

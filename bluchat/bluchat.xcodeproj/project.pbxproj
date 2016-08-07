@@ -25,6 +25,7 @@
 		1F92540D1D568F0D0009F86A /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F92540C1D568F0D0009F86A /* Message.swift */; };
 		1F92540F1D5696DD0009F86A /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F92540E1D5696DD0009F86A /* Settings.swift */; };
 		1F9254111D56984B0009F86A /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9254101D56984B0009F86A /* LoginViewController.swift */; };
+		1F9254141D56BA820009F86A /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F9254131D56BA820009F86A /* Bolts.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +49,8 @@
 		1F92540C1D568F0D0009F86A /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		1F92540E1D5696DD0009F86A /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		1F9254101D56984B0009F86A /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		1F9254121D56B8EF0009F86A /* Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
+		1F9254131D56BA820009F86A /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = ../../../FacebookSDK/Bolts.framework; sourceTree = "<group>"; };
 		87CFB6DF15BEF529AE7D0F7B /* Pods_bluchat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_bluchat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B600358B79F8119828254519 /* Pods-bluchat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-bluchat.release.xcconfig"; path = "Pods/Target Support Files/Pods-bluchat/Pods-bluchat.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -57,6 +60,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F9254141D56BA820009F86A /* Bolts.framework in Frameworks */,
 				1F8EF0671D528343006BD185 /* FBSDKCoreKit.framework in Frameworks */,
 				1F8EF0681D528343006BD185 /* FBSDKLoginKit.framework in Frameworks */,
 				1F8EF0691D528343006BD185 /* FBSDKMessengerShareKit.framework in Frameworks */,
@@ -70,6 +74,7 @@
 		19A4BC945B3A878D27AC25BF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1F9254131D56BA820009F86A /* Bolts.framework */,
 				87CFB6DF15BEF529AE7D0F7B /* Pods_bluchat.framework */,
 			);
 			name = Frameworks;
@@ -100,6 +105,7 @@
 			isa = PBXGroup;
 			children = (
 				1F8EF0521D52808E006BD185 /* AppDelegate.swift */,
+				1F9254121D56B8EF0009F86A /* Bridging-Header.h */,
 				1F92540E1D5696DD0009F86A /* Settings.swift */,
 				1F8EF06A1D5298FF006BD185 /* ChatsViewController.swift */,
 				1F8EF06C1D529B4F006BD185 /* MessagesViewController.swift */,
@@ -386,6 +392,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Ham.bluchat;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "bluchat/Bridging-Header.h";
 			};
 			name = Debug;
 		};
@@ -406,6 +413,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Ham.bluchat;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "bluchat/Bridging-Header.h";
 			};
 			name = Release;
 		};
