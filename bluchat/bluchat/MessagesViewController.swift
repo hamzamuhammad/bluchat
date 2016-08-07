@@ -10,6 +10,7 @@ import UIKit
 import JSQMessagesViewController
 import syncano_ios
 import MultipeerConnectivity
+import CoreData
 
 class MessagesViewController: JSQMessagesViewController {
     
@@ -24,7 +25,6 @@ class MessagesViewController: JSQMessagesViewController {
     var chatLog: ChatLog! {
         didSet {
             navigationItem.title = chatLog.recipientName
-            messages = chatLog.messages
         }
     }
     var cameFromDiscover: Bool?
@@ -37,11 +37,19 @@ class MessagesViewController: JSQMessagesViewController {
         return formatter
     }()
     
+    var chatMessages: [ChatMessage]!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // Setup public info
         self.setup()
+        
+        // Retrieve old messages from core data
+        if (cameFromDiscover == false) {
+            loadChatMessages()
+            convertChatMessageToJSQMessage()
+        }
         
         // If bluetooth, set up an observer for received msg
         if (cameFromDiscover == true) {
@@ -51,6 +59,8 @@ class MessagesViewController: JSQMessagesViewController {
             self.downloadNewestMessagesFromSyncano()
         }
         
+        self.collectionView.collectionViewLayout.incomingAvatarViewSize = CGSizeZero
+        self.collectionView.collectionViewLayout.outgoingAvatarViewSize = CGSizeZero
         self.tabBarController?.tabBar.hidden = true
     }
     
@@ -76,6 +86,9 @@ class MessagesViewController: JSQMessagesViewController {
         super.viewWillDisappear(animated)
         
         // Have to save these messages?
+        if (cameFromDiscover == false) {
+            saveChatMessageChanges()
+        }
         
         self.tabBarController?.tabBar.hidden = false
     }
@@ -84,10 +97,26 @@ class MessagesViewController: JSQMessagesViewController {
         super.viewWillAppear(animated)
         
         // Have to load messages?
+        if (cameFromDiscover == false) {
+            loadChatMessages()
+            convertChatMessageToJSQMessage()
+        }
         
         reloadMessagesView()
     }
     
+    func convertChatMessageToJSQMessage() {
+        
+        var tempMessages: [JSQMessage]!
+        for chatMsg in chatMessages {
+            let message = JSQMessage(senderId: chatMsg.senderID, senderDisplayName: chatMsg.senderDisplayName, date: chatMsg.date, text: chatMsg.text)
+            tempMessages.append(message)
+        }
+        
+        messages = tempMessages
+    }
+    
+    // Oddly enough, this method isn't used -- check up on this
     func reloadAllMessages() {
         self.messages = []
         self.reloadMessagesView()
@@ -144,7 +173,9 @@ extension MessagesViewController {
     }
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, attributedTextForMessageBubbleTopLabelAtIndexPath indexPath: NSIndexPath!) -> NSAttributedString! {
+        
         let data = self.collectionView(self.collectionView, messageDataForItemAtIndexPath: indexPath)
+        
         if (self.senderDisplayName == data.senderDisplayName()) {
             return nil
         }
@@ -152,7 +183,9 @@ extension MessagesViewController {
     }
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, layout collectionViewLayout: JSQMessagesCollectionViewFlowLayout!, heightForMessageBubbleTopLabelAtIndexPath indexPath: NSIndexPath!) -> CGFloat {
+        
         let data = self.collectionView(self.collectionView, messageDataForItemAtIndexPath: indexPath)
+        
         if (self.senderDisplayName == data.senderDisplayName()) {
             return 0.0
         }
@@ -165,7 +198,12 @@ extension MessagesViewController {
     override func didPressSendButton(button: UIButton!, withMessageText text: String!, senderId: String!, senderDisplayName: String!, date: NSDate!) {
         
         // Create msg and add to messages array
+        // We also need an extra argument here
         let message = JSQMessage(senderId: senderId, senderDisplayName: senderDisplayName, date: date, text: text)
+        
+        // Add to core data
+        let messageID = chatLog.chatLogID
+        storeMessage(message.senderId, senderDisplayName: message.senderId, date: message.date!, text: message.text, messageID: messageID, inContext: self.appDelegate.coreDataStack.mainQueueContext)
         
         self.messages.append(message)
  
@@ -206,6 +244,7 @@ extension MessagesViewController {
     }
     
     func downloadNewestMessagesFromSyncano() {
+        // Have to only update relevant msgs, so we go to bottom method and tweak it
         Message.please().giveMeDataObjectsWithCompletion { objects, error in
             
             if let messages = objects as? [Message] {
@@ -218,8 +257,12 @@ extension MessagesViewController {
     }
     
     func jsqMessageFromSyncanoMessage(message: Message) -> JSQMessage {
-        
+        // Where we put additional argument (entity type)
         let jsqMessage = JSQMessage(senderId: message.senderId, senderDisplayName: message.senderId, date: message.created_at, text: message.text)
+        
+        // Add to core data
+        let messageID = chatLog.chatLogID
+        storeMessage(message.senderId, senderDisplayName: message.senderId, date: message.created_at!, text: message.text, messageID: messageID, inContext: self.appDelegate.coreDataStack.mainQueueContext)
         
         return jsqMessage
     }
@@ -228,7 +271,10 @@ extension MessagesViewController {
         var jsqMessages: [JSQMessage] = []
         
         for message in messages {
-            jsqMessages.append(self.jsqMessageFromSyncanoMessage(message))
+            // Only update relevant messages
+            if message.senderId == self.senderId || message.senderId == chatLog.recipientName {
+                jsqMessages.append(self.jsqMessageFromSyncanoMessage(message))
+            }
         }
         
         return jsqMessages
@@ -247,7 +293,17 @@ extension MessagesViewController: SCChannelDelegate {
             return
         }
         
-        self.messages.append(self.jsqMessageFromSyncanoMessage(message!))
+        let msg = jsqMessageFromSyncanoMessage(message!)
+
+        // Here, we check if the senderId of the message is from the person in our chatLog
+        if message!.senderId == chatLog.recipientName {
+            self.messages.append(msg)
+        }
+        else {
+            // If we get here, we add the message to the proper chatLog or create a new one if chatlog doesn't exist
+            // TODO
+        }
+        
         self.finishReceivingMessage()
     }
     
@@ -272,6 +328,87 @@ extension MessagesViewController: SCChannelDelegate {
             break
         }
     }
+}
+
+//MARK - CoreData
+
+extension MessagesViewController {
+    
+    // When called from 'new chat' button, do this: makeNewChatLog(.., .., .., self.coreDataStack.mainQueueContext)
+    // Store a JSQMessage in core data
+    func storeMessage(senderID: String, senderDisplayName: String, date: NSDate, text: String, messageID: String, inContext context: NSManagedObjectContext) {
+        
+        var chatMessage: ChatMessage!
+        context.performBlockAndWait() {
+            chatMessage = NSEntityDescription.insertNewObjectForEntityForName("ChatMessage", inManagedObjectContext: context) as! ChatMessage
+            chatMessage.senderID = senderID
+            chatMessage.senderDisplayName = senderDisplayName
+            chatMessage.date = date
+            chatMessage.text = text
+            chatMessage.messageID = messageID
+        }
+    }
+    
+    // Commented out stuff is for sorting the messages (ignore for now)
+    func saveChatMessageChanges() {
+        
+//        let mainQueueContext = appDelegate.coreDataStack.mainQueueContext
+//        mainQueueContext.performBlockAndWait() {
+//            try! mainQueueContext.obtainPermanentIDsForObjects(self.chatMessages)
+//        }
+//        let objectIDs = chatMessages.map{ $0.objectID}
+//        let predicate = NSPredicate(format: "self IN %@", objectIDs)
+//        let sortByDateReceived = NSSortDescriptor(key: "date", ascending: true)
+        
+        do {
+            try appDelegate.coreDataStack.saveChanges()
+            
+//            try self.fetchMainQueueChatMessages(predicate: predicate, sortDescriptors: [sortByDateReceived])
+//            result = .Success(mainQueueChatLogs)
+        }
+        catch let error {
+            print("saving to core data failed with: \(error)")
+        }
+    }
+    
+    // Update our chatlog array
+    func fetchMainQueueChatMessages(predicate predicate: NSPredicate? = nil, sortDescriptors: [NSSortDescriptor]? = nil) throws -> [ChatMessage] {
+        
+        let fetchRequest = NSFetchRequest(entityName: "ChatMessage")
+        fetchRequest.sortDescriptors = sortDescriptors
+        fetchRequest.predicate = predicate
+        
+        let mainQueueContext = appDelegate.coreDataStack.mainQueueContext
+        var mainQueueChatMessages: [ChatMessage]?
+        var fetchRequestError: ErrorType?
+        mainQueueContext.performBlockAndWait() {
+            do {
+                mainQueueChatMessages = try mainQueueContext.executeFetchRequest(fetchRequest) as? [ChatMessage]
+            }
+            catch let error {
+                fetchRequestError = error
+            }
+        }
+        
+        guard let chatMessages = mainQueueChatMessages else {
+            throw fetchRequestError!
+        }
+        
+        return chatMessages
+    }
+    
+    //put this shit in viewdidload
+    func loadChatMessages() {
+        let sortByDateTaken = NSSortDescriptor(key: "lastMessageTime", ascending: true)
+        let allChatMessages = try! self.fetchMainQueueChatMessages(predicate: nil, sortDescriptors: [sortByDateTaken])
+        
+        NSOperationQueue.mainQueue().addOperationWithBlock() {
+            self.chatMessages = allChatMessages
+            // refresh table view here
+        }
+    }
+
+    
 }
 
 

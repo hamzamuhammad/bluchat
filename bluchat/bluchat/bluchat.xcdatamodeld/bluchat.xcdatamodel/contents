@@ -1,4 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10174" systemVersion="15G31" minimumToolsVersion="Xcode 7.0">
-    <elements/>
+    <entity name="ChatLog" representedClassName=".ChatLog" syncable="YES">
+        <attribute name="chatLogID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lastMessageReceived" attributeType="String" syncable="YES"/>
+        <attribute name="lastMessageTime" attributeType="Date" syncable="YES"/>
+        <attribute name="recipientName" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="ChatMessage" representedClassName=".ChatMessage" syncable="YES">
+        <attribute name="date" attributeType="Date" syncable="YES"/>
+        <attribute name="messageID" attributeType="String" syncable="YES"/>
+        <attribute name="senderDisplayName" attributeType="String" syncable="YES"/>
+        <attribute name="senderID" attributeType="String" syncable="YES"/>
+        <attribute name="text" attributeType="String" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="ChatLog" positionX="-18" positionY="27" width="128" height="105"/>
+        <element name="ChatMessage" positionX="-18" positionY="54" width="128" height="120"/>
+    </elements>
 </model>

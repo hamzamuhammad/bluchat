@@ -11,13 +11,18 @@ import UIKit
 class LoginViewController: UIViewController, FBSDKLoginButtonDelegate {
     // This class will login user into facebook!
     
+    var userName: NSString?
+    var userEmail: NSString?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
         if (FBSDKAccessToken.currentAccessToken() != nil)
         {
-            // User is already logged in, do work such as go to next view controller.
+            NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
+                self.performSegueWithIdentifier("StartChat", sender: self)
+            }
         }
         else
         {
@@ -50,9 +55,9 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate {
         else {
             // If you ask for multiple permissions at once, you
             // should check if specific permissions missing
-            if result.grantedPermissions.contains("email")
+            if result.grantedPermissions.contains("email") && result.grantedPermissions.contains("public_profile")
             {
-                // Do work
+            
             }
         }
     }
@@ -61,7 +66,7 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate {
         print("User Logged Out")
     }
     
-    func returnUserData()
+    func assignUserData()
     {
         let graphRequest : FBSDKGraphRequest = FBSDKGraphRequest(graphPath: "me", parameters: nil)
         graphRequest.startWithCompletionHandler({ (connection, result, error) -> Void in
@@ -74,11 +79,30 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate {
             else
             {
                 print("fetched user: \(result)")
-                let userName : NSString = result.valueForKey("name") as! NSString
-                print("User Name is: \(userName)")
-                let userEmail : NSString = result.valueForKey("email") as! NSString
-                print("User Email is: \(userEmail)")
+                self.userName = result.valueForKey("name") as? NSString
+                print("User Name is: \(self.userName)")
+                self.userEmail = result.valueForKey("email") as? NSString
+                print("User Email is: \(self.userEmail)")
             }
         })
     }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
+        if segue.identifier == "StartMain" {
+            //let chatLogStore = nil // FIX THIS PART TO GET CHATSTORE FROM CORE DATA
+            
+            let tabBarController = segue.destinationViewController as! UITabBarController
+            let navController = tabBarController.viewControllers![0] as! UINavigationController
+            let chatsViewController = navController.topViewController as! ChatsViewController
+            
+            // Here, we will retrieve all chat logs from core data and set them to the [ChatLog] array
+            try! chatsViewController.chatLogStore = chatsViewController.fetchMainQueueChatLogs(predicate: nil, sortDescriptors: nil)
+            
+        }
+    }
+    
+    
+    
+    
 }

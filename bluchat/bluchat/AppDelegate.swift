@@ -13,8 +13,8 @@ import syncano_ios
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    let chatLogStore = ChatLogStore()
     var mpcManager: MPCManager!
+    var coreDataStack: CoreDataStack!
     
     func application(application: UIApplication,
                      openURL url: NSURL,
@@ -33,12 +33,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Syncano.sharedInstanceWithApiKey(syncanoApiKey, instanceName: syncanoInstanceName)
         
         mpcManager = MPCManager()
-        
-        // Set ChatLogStore
-//        let tabBarController = window!.rootViewController as! UITabBarController
-//        let navController = tabBarController.viewControllers![0] as! UINavigationController
-//        let chatsViewController = navController.topViewController as! ChatsViewController
-//        chatsViewController.chatLogStore = chatLogStore
+        coreDataStack = CoreDataStack(modelName: "bluchat")
         
         return FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
     }

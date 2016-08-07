@@ -138,7 +138,7 @@ class DiscoverViewController: UITableViewController, MPCManagerDelegate {
     
         if segue.identifier == "StartChat" {
             // First, make a temporary chat
-            let chatLog = ChatLog(recipientName: (currentPeerID?.displayName)!, lastMessageRecieved: nil)
+            let chatLog = ChatLog(entity: (currentPeerID?.displayName)!, insertIntoManagedObjectContext: nil)
             
             // Now, go to new chat:
             let messagesViewController = segue.destinationViewController as! MessagesViewController

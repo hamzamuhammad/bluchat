@@ -8,6 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		12CDE67E6D79F26C5DBE5E0B /* Pods_bluchat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 87CFB6DF15BEF529AE7D0F7B /* Pods_bluchat.framework */; };
+		1F7035811D57045D004CF85F /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7035801D57045D004CF85F /* CoreDataStack.swift */; };
+		1F70358F1D570CD0004CF85F /* bluchat.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 1F70358D1D570CD0004CF85F /* bluchat.xcdatamodeld */; };
+		1F7035931D570D1E004CF85F /* ChatLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7035911D570D1E004CF85F /* ChatLog.swift */; };
+		1F7035971D571514004CF85F /* ChatLog+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7035961D571514004CF85F /* ChatLog+CoreDataProperties.swift */; };
+		1F7035AA1D571D49004CF85F /* ChatMessage+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7035A81D571D49004CF85F /* ChatMessage+CoreDataProperties.swift */; };
+		1F7035AB1D571D49004CF85F /* ChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7035A91D571D49004CF85F /* ChatMessage.swift */; };
 		1F8EF0531D52808E006BD185 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8EF0521D52808E006BD185 /* AppDelegate.swift */; };
 		1F8EF0581D52808E006BD185 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EF0561D52808E006BD185 /* Main.storyboard */; };
 		1F8EF05A1D52808E006BD185 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EF0591D52808E006BD185 /* Assets.xcassets */; };
@@ -17,8 +23,6 @@
 		1F8EF0691D528343006BD185 /* FBSDKMessengerShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F8EF0661D528343006BD185 /* FBSDKMessengerShareKit.framework */; };
 		1F8EF06B1D5298FF006BD185 /* ChatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8EF06A1D5298FF006BD185 /* ChatsViewController.swift */; };
 		1F8EF06D1D529B4F006BD185 /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8EF06C1D529B4F006BD185 /* MessagesViewController.swift */; };
-		1F8EF06F1D52A323006BD185 /* ChatLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8EF06E1D52A323006BD185 /* ChatLog.swift */; };
-		1F8EF0711D52A4E9006BD185 /* ChatLogStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8EF0701D52A4E9006BD185 /* ChatLogStore.swift */; };
 		1F8EF0731D52B80D006BD185 /* ChatLogCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8EF0721D52B80D006BD185 /* ChatLogCell.swift */; };
 		1F8EF0751D52E7A6006BD185 /* MPCManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8EF0741D52E7A6006BD185 /* MPCManager.swift */; };
 		1F8EF0771D530B85006BD185 /* DiscoverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8EF0761D530B85006BD185 /* DiscoverViewController.swift */; };
@@ -30,6 +34,12 @@
 
 /* Begin PBXFileReference section */
 		106D52A46129FBAE9720F4BA /* Pods-bluchat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-bluchat.debug.xcconfig"; path = "Pods/Target Support Files/Pods-bluchat/Pods-bluchat.debug.xcconfig"; sourceTree = "<group>"; };
+		1F7035801D57045D004CF85F /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
+		1F70358E1D570CD0004CF85F /* bluchat.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = bluchat.xcdatamodel; sourceTree = "<group>"; };
+		1F7035911D570D1E004CF85F /* ChatLog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatLog.swift; sourceTree = "<group>"; };
+		1F7035961D571514004CF85F /* ChatLog+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ChatLog+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		1F7035A81D571D49004CF85F /* ChatMessage+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ChatMessage+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		1F7035A91D571D49004CF85F /* ChatMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatMessage.swift; sourceTree = "<group>"; };
 		1F8EF04F1D52808E006BD185 /* bluchat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = bluchat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F8EF0521D52808E006BD185 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1F8EF0571D52808E006BD185 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -41,8 +51,6 @@
 		1F8EF0661D528343006BD185 /* FBSDKMessengerShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKMessengerShareKit.framework; path = ../../../FacebookSDK/FBSDKMessengerShareKit.framework; sourceTree = "<group>"; };
 		1F8EF06A1D5298FF006BD185 /* ChatsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatsViewController.swift; sourceTree = "<group>"; };
 		1F8EF06C1D529B4F006BD185 /* MessagesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagesViewController.swift; sourceTree = "<group>"; };
-		1F8EF06E1D52A323006BD185 /* ChatLog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatLog.swift; sourceTree = "<group>"; };
-		1F8EF0701D52A4E9006BD185 /* ChatLogStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatLogStore.swift; sourceTree = "<group>"; };
 		1F8EF0721D52B80D006BD185 /* ChatLogCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatLogCell.swift; sourceTree = "<group>"; };
 		1F8EF0741D52E7A6006BD185 /* MPCManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MPCManager.swift; sourceTree = "<group>"; };
 		1F8EF0761D530B85006BD185 /* DiscoverViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscoverViewController.swift; sourceTree = "<group>"; };
@@ -107,15 +115,19 @@
 				1F8EF0521D52808E006BD185 /* AppDelegate.swift */,
 				1F9254121D56B8EF0009F86A /* Bridging-Header.h */,
 				1F92540E1D5696DD0009F86A /* Settings.swift */,
+				1F9254101D56984B0009F86A /* LoginViewController.swift */,
 				1F8EF06A1D5298FF006BD185 /* ChatsViewController.swift */,
 				1F8EF06C1D529B4F006BD185 /* MessagesViewController.swift */,
 				1F8EF0761D530B85006BD185 /* DiscoverViewController.swift */,
-				1F9254101D56984B0009F86A /* LoginViewController.swift */,
 				1F8EF0561D52808E006BD185 /* Main.storyboard */,
+				1F7035801D57045D004CF85F /* CoreDataStack.swift */,
+				1F70358D1D570CD0004CF85F /* bluchat.xcdatamodeld */,
+				1F7035A81D571D49004CF85F /* ChatMessage+CoreDataProperties.swift */,
+				1F7035A91D571D49004CF85F /* ChatMessage.swift */,
+				1F7035961D571514004CF85F /* ChatLog+CoreDataProperties.swift */,
+				1F7035911D570D1E004CF85F /* ChatLog.swift */,
 				1F92540C1D568F0D0009F86A /* Message.swift */,
 				1F8EF0741D52E7A6006BD185 /* MPCManager.swift */,
-				1F8EF0701D52A4E9006BD185 /* ChatLogStore.swift */,
-				1F8EF06E1D52A323006BD185 /* ChatLog.swift */,
 				1F8EF0721D52B80D006BD185 /* ChatLogCell.swift */,
 				1F8EF0591D52808E006BD185 /* Assets.xcassets */,
 				1F8EF05B1D52808E006BD185 /* LaunchScreen.storyboard */,
@@ -257,16 +269,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F8EF06D1D529B4F006BD185 /* MessagesViewController.swift in Sources */,
-				1F8EF0711D52A4E9006BD185 /* ChatLogStore.swift in Sources */,
 				1F8EF06B1D5298FF006BD185 /* ChatsViewController.swift in Sources */,
+				1F7035931D570D1E004CF85F /* ChatLog.swift in Sources */,
+				1F7035AB1D571D49004CF85F /* ChatMessage.swift in Sources */,
+				1F7035811D57045D004CF85F /* CoreDataStack.swift in Sources */,
 				1F92540D1D568F0D0009F86A /* Message.swift in Sources */,
 				1F92540F1D5696DD0009F86A /* Settings.swift in Sources */,
-				1F8EF06F1D52A323006BD185 /* ChatLog.swift in Sources */,
+				1F7035971D571514004CF85F /* ChatLog+CoreDataProperties.swift in Sources */,
+				1F7035AA1D571D49004CF85F /* ChatMessage+CoreDataProperties.swift in Sources */,
 				1F8EF0751D52E7A6006BD185 /* MPCManager.swift in Sources */,
 				1F8EF0771D530B85006BD185 /* DiscoverViewController.swift in Sources */,
 				1F8EF0731D52B80D006BD185 /* ChatLogCell.swift in Sources */,
 				1F8EF0531D52808E006BD185 /* AppDelegate.swift in Sources */,
 				1F9254111D56984B0009F86A /* LoginViewController.swift in Sources */,
+				1F70358F1D570CD0004CF85F /* bluchat.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -439,6 +455,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		1F70358D1D570CD0004CF85F /* bluchat.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				1F70358E1D570CD0004CF85F /* bluchat.xcdatamodel */,
+			);
+			currentVersion = 1F70358E1D570CD0004CF85F /* bluchat.xcdatamodel */;
+			path = bluchat.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 1F8EF0471D52808E006BD185 /* Project object */;
 }
