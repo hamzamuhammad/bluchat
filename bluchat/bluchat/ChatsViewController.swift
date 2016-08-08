@@ -10,13 +10,16 @@ import UIKit
 import syncano_ios
 import CoreData
 
-class ChatsViewController: UITableViewController {
+class ChatsViewController: UITableViewController, UISearchControllerDelegate, UISearchResultsUpdating, UISearchBarDelegate {
     
     // Reference to appDelegate
     let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
     
     // Main data source
     var chatLogStore: [ChatLog]!
+    
+    // Search bar
+    var searchController: UISearchController!
     
     // Format an NSDate object
     let dateFormatter: NSDateFormatter = {
@@ -25,19 +28,6 @@ class ChatsViewController: UITableViewController {
         formatter.timeStyle = .NoStyle
         return formatter
     }()
-    
-    @IBAction func newChat(sender: AnyObject) {
-        // Have to have drill down interface to a contacts list of users...
-        // For now, just add a new chat to the table
-        
-        // Retrieve new chat log created (or load old one)
-//          let newChatLog = chatLogStore.addNewChat()
-        
-//        if let index = chatLogStore.allChatLogs.indexOf(newChatLog) {
-//            let indexPath = NSIndexPath(forRow: index, inSection: 0)
-//            tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
-//        }
-    }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return chatLogStore.count
@@ -61,10 +51,37 @@ class ChatsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Show a search bar that the user can enter in an email address to message
+        self.searchController = UISearchController(searchResultsController: nil)
+        self.searchController.searchResultsUpdater = self
+        self.searchController.delegate = self
+        self.searchController.searchBar.delegate = self
+        
+        self.searchController.hidesNavigationBarDuringPresentation = false
+        self.searchController.dimsBackgroundDuringPresentation = true
+        self.searchController.searchBar.placeholder = "New chat"
+        
+        self.navigationItem.titleView = searchController.searchBar
+        
+        self.definesPresentationContext = true
+        
+        
+        // Tweak our table cell height
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 65
         
+        // Load initial chatlogs
         loadChatLogs()
+    }
+    
+    func updateSearchResultsForSearchController(searchController: UISearchController) {
+        
+    }
+    
+    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+        print("search button clicked!")
+        
+        // Here, we will check if the user entered 
     }
     
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {

@@ -16,16 +16,15 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
         
+        // Skip FBLogin if user already logged in
         if (FBSDKAccessToken.currentAccessToken() != nil)
         {
-            NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
-                self.performSegueWithIdentifier("ShowMain", sender: self)
-            }
+            fbLoginSuccess = true
         }
         else
         {
+            // Set up login button and permissions
             let loginView : FBSDKLoginButton = FBSDKLoginButton()
             self.view.addSubview(loginView)
             loginView.center = self.view.center
@@ -34,7 +33,9 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate {
         }
         
     }
+    
     override func viewDidAppear(animated: Bool) {
+        // Prevent logout button from appearing instead of segue
         if FBSDKAccessToken.currentAccessToken() != nil || fbLoginSuccess == true {
             performSegueWithIdentifier("ShowMain", sender: self)
         }
@@ -46,7 +47,6 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate {
     }
     
     // Facebook Delegate Methods
-    
     func loginButton(loginButton: FBSDKLoginButton!, didCompleteWithResult result: FBSDKLoginManagerLoginResult!, error: NSError!) {
         print("User Logged In")
         
@@ -58,13 +58,13 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate {
             // Handle cancellations
         }
         else {
+            // Successful login, and hide button
             fbLoginSuccess = true
             loginButton.hidden = true
-            // If you ask for multiple permissions at once, you
-            // should check if specific permissions missing
+            
+            // Check if permissions are granted
             if result.grantedPermissions.contains("email") && result.grantedPermissions.contains("public_profile")
             {
-                // Here, we make an account on syncano
                 self.getUserEmail {(userEmail, userName, error) -> Void in
                     
                     if error != nil {
@@ -79,9 +79,6 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate {
                     print("registered user!")
                 }
             }
-        }
-        NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
-            self.performSegueWithIdentifier("ShowMain", sender: self)
         }
     }
     

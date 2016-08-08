@@ -81,13 +81,7 @@
                             <outlet property="delegate" destination="cZ8-Qc-j2c" id="WeU-gc-fID"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="bluchat" id="740-XX-S5g">
-                        <barButtonItem key="rightBarButtonItem" systemItem="compose" id="gQd-kd-3Jr">
-                            <connections>
-                                <action selector="newChat:" destination="cZ8-Qc-j2c" id="H30-tG-oGc"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="bluchat" id="740-XX-S5g"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qMy-6J-bIr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
