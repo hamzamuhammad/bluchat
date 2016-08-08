@@ -40,6 +40,9 @@ class MessagesViewController: JSQMessagesViewController {
     // Check whether chat originated from discover tab
     var cameFromDiscover: Bool?
     
+    // User email address
+    var userEmail: String?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -151,8 +154,8 @@ class MessagesViewController: JSQMessagesViewController {
             channel.delegate = self
             channel.subscribeToChannel()
             // set up user info from facebook login details
-            senderId = ""
-            senderDisplayName = ""
+            senderId = userEmail
+            senderDisplayName = chatLog.recipientName
         }
     }
 }
@@ -252,7 +255,9 @@ extension MessagesViewController {
         let messageToSend = Message()
         
         messageToSend.text = message.text
+        print("assigning our sent messages with a senderId of \(self.senderId) and a recipientId of \(chatLog.recipientName)")
         messageToSend.senderId = self.senderId
+        messageToSend.recipientId = chatLog.recipientName
         messageToSend.channel = syncanoChannelName
         messageToSend.other_permissions = .Full
         
@@ -264,6 +269,8 @@ extension MessagesViewController {
     }
     
     func downloadNewestMessagesFromSyncano() {
+        print("id that we want to get: \(chatLog.recipientName)")
+        
         // Have to only update relevant msgs, so we go to bottom method and tweak it
         Message.please().giveMeDataObjectsWithCompletion { objects, error in
             
@@ -280,8 +287,9 @@ extension MessagesViewController {
         var jsqMessages: [JSQMessage] = []
         
         for message in messages {
-            // Only update relevant messages
-            if message.senderId == self.senderId || message.senderId == chatLog.recipientName {
+            print("We are checking the messages from backend: message.senderId is \(message.senderId) and message.recipientId is \(message.recipientId)")
+            // First check gets our own messages, second check gets messages addressed to us only
+            if message.senderId == self.senderId || message.recipientId == self.senderId {
                 jsqMessages.append(self.jsqMessageFromSyncanoMessage(message))
             }
         }
@@ -315,8 +323,8 @@ extension MessagesViewController: SCChannelDelegate {
         
         let msg = jsqMessageFromSyncanoMessage(message!)
 
-        // Here, we check if the senderId of the message is from the person in our chatLog
-        if message!.senderId == chatLog.recipientName {
+        // If the message is addressed to us, receive it
+        if message!.recipientId == self.senderId {
             self.messages.append(msg)
         }
         else {

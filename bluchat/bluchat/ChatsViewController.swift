@@ -9,6 +9,7 @@
 import UIKit
 import syncano_ios
 import CoreData
+import JSQMessagesViewController
 
 class ChatsViewController: UITableViewController, UISearchControllerDelegate, UISearchResultsUpdating, UISearchBarDelegate {
     
@@ -31,6 +32,9 @@ class ChatsViewController: UITableViewController, UISearchControllerDelegate, UI
     
     // Temp var for new chatlog email addresss
     var newRecipientName: String?
+    
+    // What userEmail is
+    var userEmail: String?
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return chatLogStore.count
@@ -142,6 +146,7 @@ class ChatsViewController: UITableViewController, UISearchControllerDelegate, UI
             let messagesViewController = segue.destinationViewController as! MessagesViewController
             messagesViewController.chatLog = chatLog
             messagesViewController.cameFromDiscover = false
+            messagesViewController.userEmail = userEmail
         }
     }
     

@@ -13,9 +13,11 @@ class Message: SCDataObject {
     var text = ""
     var senderId = ""
     var attachment: SCFile?
+    var recipientId = ""
     
     override class func extendedPropertiesMapping() -> [NSObject: AnyObject] {
         return [
-        "senderId":"senderid"]
+        "senderId":"senderid",
+        "recipientId":"recipientid"]
     }
 }

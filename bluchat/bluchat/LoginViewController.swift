@@ -13,6 +13,7 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate {
     // This class will login user into facebook!
     
     var fbLoginSuccess = false
+    var userEmail: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -73,6 +74,7 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate {
                     
                     print("email: \(userEmail)")
                     print("name: \(userName)")
+                    self.userEmail = userEmail
                     SCUser.registerWithUsername(userEmail!, password: userName!) { error in
                         print("error registering user: \(error)")
                     }
@@ -112,7 +114,7 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate {
             
             // Here, we will retrieve all chat logs from core data and set them to the [ChatLog] array
             try! chatsViewController.chatLogStore = chatsViewController.fetchMainQueueChatLogs(predicate: nil, sortDescriptors: nil)
-            
+            chatsViewController.userEmail = userEmail
         }
     }
     
