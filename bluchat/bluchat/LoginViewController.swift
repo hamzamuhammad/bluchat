@@ -7,12 +7,12 @@
 //
 
 import UIKit
+import syncano_ios
 
 class LoginViewController: UIViewController, FBSDKLoginButtonDelegate {
     // This class will login user into facebook!
     
-    var userName: NSString?
-    var userEmail: NSString?
+    var fbLoginSuccess = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,6 +34,11 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate {
         }
         
     }
+    override func viewDidAppear(animated: Bool) {
+        if FBSDKAccessToken.currentAccessToken() != nil || fbLoginSuccess == true {
+            performSegueWithIdentifier("ShowMain", sender: self)
+        }
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -53,14 +58,30 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate {
             // Handle cancellations
         }
         else {
+            fbLoginSuccess = true
+            loginButton.hidden = true
             // If you ask for multiple permissions at once, you
             // should check if specific permissions missing
             if result.grantedPermissions.contains("email") && result.grantedPermissions.contains("public_profile")
             {
-                NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
-                    self.performSegueWithIdentifier("ShowMain", sender: self)
+                // Here, we make an account on syncano
+                self.getUserEmail {(userEmail, userName, error) -> Void in
+                    
+                    if error != nil {
+                        print("login error: \(error)")
+                    }
+                    
+                    print("email: \(userEmail)")
+                    print("name: \(userName)")
+                    SCUser.registerWithUsername(userEmail!, password: userName!) { error in
+                        print("error registering user: \(error)")
+                    }
+                    print("registered user!")
                 }
             }
+        }
+        NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
+            self.performSegueWithIdentifier("ShowMain", sender: self)
         }
     }
     
@@ -68,24 +89,18 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate {
         print("User Logged Out")
     }
     
-    func assignUserData()
-    {
-        let graphRequest : FBSDKGraphRequest = FBSDKGraphRequest(graphPath: "me", parameters: nil)
+    func getUserEmail(completion: (userEmail: String?, userName: String?, error: NSError?) -> Void) {
+        
+        let graphRequest : FBSDKGraphRequest = FBSDKGraphRequest(graphPath: "me", parameters: ["fields":"email, name"])
         graphRequest.startWithCompletionHandler({ (connection, result, error) -> Void in
             
-            if ((error) != nil)
-            {
-                // Process error
-                print("Error: \(error)")
-            }
-            else
-            {
-                print("fetched user: \(result)")
-                self.userName = result.valueForKey("name") as? NSString
-                print("User Name is: \(self.userName)")
-                self.userEmail = result.valueForKey("email") as? NSString
-                print("User Email is: \(self.userEmail)")
-            }
+            var userEmail: String?
+            var userName: String?
+            
+            userEmail = result!.objectForKey("email") as? String
+            userName = result!.objectForKey("name") as? String
+            
+            completion(userEmail: userEmail, userName: userName, error: error)
         })
     }
     
