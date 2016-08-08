@@ -114,12 +114,21 @@ class MessagesViewController: JSQMessagesViewController {
     func convertChatMessageToJSQMessage() {
         
         var tempMessages: [JSQMessage]!
-        for chatMsg in chatMessages {
-            let message = JSQMessage(senderId: chatMsg.senderID, senderDisplayName: chatMsg.senderDisplayName, date: chatMsg.date, text: chatMsg.text)
-            tempMessages.append(message)
-        }
         
-        messages = tempMessages
+        // Check whether we have any stored messages first
+        if let tempChatMessages = chatMessages {
+            
+            for chatMsg in tempChatMessages {
+                let message = JSQMessage(senderId: chatMsg.senderID, senderDisplayName: chatMsg.senderDisplayName, date: chatMsg.date, text: chatMsg.text)
+                tempMessages.append(message)
+            }
+            
+            messages = tempMessages
+        }
+        else {
+            // Otherwise, we initialize a blank messages array
+            messages = [JSQMessage]()
+        }
     }
     
     // Oddly enough, this method isn't used -- check up on this
@@ -410,7 +419,7 @@ extension MessagesViewController {
     
     //put this shit in viewdidload
     func loadChatMessages() {
-        let sortByDateTaken = NSSortDescriptor(key: "lastMessageTime", ascending: true)
+        let sortByDateTaken = NSSortDescriptor(key: "date", ascending: true)
         let allChatMessages = try! self.fetchMainQueueChatMessages(predicate: nil, sortDescriptors: [sortByDateTaken])
         
         NSOperationQueue.mainQueue().addOperationWithBlock() {

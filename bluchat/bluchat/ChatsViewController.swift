@@ -29,6 +29,9 @@ class ChatsViewController: UITableViewController, UISearchControllerDelegate, UI
         return formatter
     }()
     
+    // Temp var for new chatlog email addresss
+    var newRecipientName: String?
+    
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return chatLogStore.count
     }
@@ -81,7 +84,15 @@ class ChatsViewController: UITableViewController, UISearchControllerDelegate, UI
     func searchBarSearchButtonClicked(searchBar: UISearchBar) {
         print("search button clicked!")
         
-        // Here, we will check if the user entered 
+        // Here, we will check if the user entered a valid username and if so we make a chat for them
+        newRecipientName = searchBar.text!
+        SCUser.registerWithUsername(newRecipientName!, password: "asdf") { error in
+            // If we get in here, it means that the user exists:
+            print("user exists!")
+            
+            // Segue into a new chat
+            self.performSegueWithIdentifier("ShowMessages", sender: self)
+        }
     }
     
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
@@ -115,16 +126,22 @@ class ChatsViewController: UITableViewController, UISearchControllerDelegate, UI
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
         if segue.identifier == "ShowMessages" {
+            
+            var chatLog: ChatLog?
             if let row = tableView.indexPathForSelectedRow?.row {
                 
-                
                 // Here, we get the required messages from a ChatLog obj
-                let chatLog = chatLogStore[row]
-                
-                let messagesViewController = segue.destinationViewController as! MessagesViewController
-                messagesViewController.chatLog = chatLog
-                messagesViewController.cameFromDiscover = false
+                chatLog = chatLogStore[row]
             }
+            else {
+                
+                // In this case, there isn't a selected row, so make a new chat
+                chatLog = makeNewChatLog(newRecipientName!, lastMessageReceived: "", lastMessageTime: NSDate(), chatLogID: newRecipientName!, inContext: appDelegate.coreDataStack.mainQueueContext)
+            }
+            
+            let messagesViewController = segue.destinationViewController as! MessagesViewController
+            messagesViewController.chatLog = chatLog
+            messagesViewController.cameFromDiscover = false
         }
     }
     
@@ -144,17 +161,17 @@ class ChatsViewController: UITableViewController, UISearchControllerDelegate, UI
     // When called from 'new chat' button, do this: makeNewChatLog(.., .., .., self.coreDataStack.mainQueueContext)
     func makeNewChatLog(recipientName: String, lastMessageReceived: String, lastMessageTime: NSDate, chatLogID: String, inContext context: NSManagedObjectContext) -> ChatLog {
         
-        let fetchRequest = NSFetchRequest(entityName: "ChatLog")
-        let predicate = NSPredicate(format: "chatLogID == \(chatLogID)")
-        fetchRequest.predicate = predicate
-        
-        var fetchedChatLogs: [ChatLog]!
-        context.performBlockAndWait() {
-            fetchedChatLogs = try! context.executeFetchRequest(fetchRequest) as! [ChatLog]
-        }
-        if fetchedChatLogs.count > 0 {
-            return fetchedChatLogs.first!
-        }
+//        let fetchRequest = NSFetchRequest(entityName: "ChatLog")
+//        let predicate = NSPredicate(format: "chatLogID == \(chatLogID)")
+//        fetchRequest.predicate = predicate
+//        
+//        var fetchedChatLogs: [ChatLog]!
+//        context.performBlockAndWait() {
+//            fetchedChatLogs = try! context.executeFetchRequest(fetchRequest) as! [ChatLog]
+//        }
+//        if fetchedChatLogs.count > 0 {
+//            return fetchedChatLogs.first!
+//        }
         
         var chatLog: ChatLog!
         context.performBlockAndWait() {
