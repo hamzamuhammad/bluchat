@@ -51,9 +51,13 @@ class MessagesViewController: JSQMessagesViewController {
         
         // Retrieve old messages from core data
         if (cameFromDiscover == false) {
-            print("we attempt to load chat messages from core data")
+            
+            // Load all of the saved chat messages and add them to view
             loadChatMessages()
             convertChatMessageToJSQMessage()
+            
+            // Now, update what view with new messages from backend
+            downloadNewestMessagesFromSyncano()
         }
         
         // If bluetooth, set up an observer for received msg
@@ -97,12 +101,27 @@ class MessagesViewController: JSQMessagesViewController {
         
         // If not an MPC connection, save messages to core data
         if (cameFromDiscover == false) {
-            print("we try to save message changes")
             saveChatMessageChanges()
         }
         
         // Unhide the tab bar below
         self.tabBarController?.tabBar.hidden = false
+        
+        // Set lastMessageRecieved
+        var index = messages.count
+        var isFound = false
+        var lastMessageReceived = ""
+        
+        print("we get here")
+        while (isFound == false && index > 0) {
+            if messages[index - 1].senderId == chatLog.recipientEmail! {
+                isFound = true
+                lastMessageReceived = messages[index - 1].text
+            }
+            index -= 1
+        }
+        
+        chatLog.lastMessageReceived = lastMessageReceived
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -124,17 +143,16 @@ class MessagesViewController: JSQMessagesViewController {
         
         // Check whether we have any stored messages first
         if let tempChatMessages = chatMessages {
-            print("we are adding messages to actual array")
             for chatMsg in tempChatMessages {
                 let message = JSQMessage(senderId: chatMsg.senderID, senderDisplayName: chatMsg.senderDisplayName, date: chatMsg.date, text: chatMsg.text)
                 tempMessages.append(message)
             }
-            
             messages = tempMessages
+            
         }
         else {
             // Otherwise, we initialize a blank messages array
-            print("value of chatMessages: \(chatMessages)")
+            //print("value of chatMessages: \(chatMessages)")
             messages = [JSQMessage]()
         }
     }
@@ -222,6 +240,7 @@ extension MessagesViewController {
 
 //MARK - Toolbar
 extension MessagesViewController {
+    
     override func didPressSendButton(button: UIButton!, withMessageText text: String!, senderId: String!, senderDisplayName: String!, date: NSDate!) {
         
         // Create msg and add to messages array
@@ -275,12 +294,11 @@ extension MessagesViewController {
     
     func downloadNewestMessagesFromSyncano() {
         
-        // Have to only update relevant msgs, so we go to bottom method and tweak it
         Message.please().giveMeDataObjectsWithCompletion { objects, error in
             
             if let messages = objects as? [Message] {
                 
-                self.messages = self.jsqMessagesFromSyncanoMessages(messages)
+                self.messages.appendContentsOf(self.jsqMessagesFromSyncanoMessages(messages))
                 self.finishReceivingMessage()
             }
             
@@ -288,12 +306,17 @@ extension MessagesViewController {
     }
     
     func jsqMessagesFromSyncanoMessages(messages: [Message]) -> [JSQMessage] {
+        
         var jsqMessages: [JSQMessage] = []
         
         for message in messages {
             // First check gets our own messages, second check gets messages addressed to us only
             if message.senderId == self.senderId || message.recipientId == self.senderId {
-                jsqMessages.append(self.jsqMessageFromSyncanoMessage(message))
+
+                // Only add messages newer than core data
+                if self.messages.count == 0 || message.created_at!.compare(self.messages.last!.date) == NSComparisonResult.OrderedDescending {
+                    jsqMessages.append(self.jsqMessageFromSyncanoMessage(message))
+                }
             }
         }
         

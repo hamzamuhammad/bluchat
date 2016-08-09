@@ -85,7 +85,7 @@ class ChatsViewController: UITableViewController, UISearchControllerDelegate, UI
         tableView.estimatedRowHeight = 65
         
         // Load initial chatlogs
-        print("we load chatlogs from viewdidload")
+        print("initial load of chatlogs")
         loadChatLogs()
     }
     
@@ -163,15 +163,22 @@ class ChatsViewController: UITableViewController, UISearchControllerDelegate, UI
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         
-        print("we are in chatsview view will disappear")
+        print("trying to save chatlogs")
         saveChatLogChanges()
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-//        print("we are in chatsview view will appear")
-//        loadChatLogs()
+        print("trying to load chatlogs")
+        loadChatLogs()
+        reloadChatsView()
+    }
+    
+    func reloadChatsView() {
+        dispatch_async(dispatch_get_main_queue()){
+            self.tableView?.reloadData()
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -260,14 +267,14 @@ class ChatsViewController: UITableViewController, UISearchControllerDelegate, UI
     func loadChatLogs() {
         let sortByDateTaken = NSSortDescriptor(key: "lastMessageTime", ascending: true)
         let allChatLogs = try! self.fetchMainQueueChatLogs(predicate: nil, sortDescriptors: [sortByDateTaken])
-        print("we are in chatsview loadchatlogs method")
-        NSOperationQueue.mainQueue().addOperationWithBlock() {
+        print("we are in CHATLOAD METHOD")
+        //NSOperationQueue.mainQueue().addOperationWithBlock() {
             self.chatLogStore = allChatLogs
             for chatlog in self.chatLogStore {
                 print("loaded chatlog: \(chatlog.recipientName)")
             }
             // refresh table view here
-        }
+        //}
     }
 }
 
