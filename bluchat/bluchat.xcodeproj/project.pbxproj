@@ -14,6 +14,7 @@
 		1F7035971D571514004CF85F /* ChatLog+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7035961D571514004CF85F /* ChatLog+CoreDataProperties.swift */; };
 		1F7035AA1D571D49004CF85F /* ChatMessage+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7035A81D571D49004CF85F /* ChatMessage+CoreDataProperties.swift */; };
 		1F7035AB1D571D49004CF85F /* ChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7035A91D571D49004CF85F /* ChatMessage.swift */; };
+		1F7035AD1D594104004CF85F /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7035AC1D594104004CF85F /* User.swift */; };
 		1F8EF0531D52808E006BD185 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8EF0521D52808E006BD185 /* AppDelegate.swift */; };
 		1F8EF0581D52808E006BD185 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EF0561D52808E006BD185 /* Main.storyboard */; };
 		1F8EF05A1D52808E006BD185 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EF0591D52808E006BD185 /* Assets.xcassets */; };
@@ -40,6 +41,7 @@
 		1F7035961D571514004CF85F /* ChatLog+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ChatLog+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		1F7035A81D571D49004CF85F /* ChatMessage+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ChatMessage+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		1F7035A91D571D49004CF85F /* ChatMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatMessage.swift; sourceTree = "<group>"; };
+		1F7035AC1D594104004CF85F /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		1F8EF04F1D52808E006BD185 /* bluchat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = bluchat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F8EF0521D52808E006BD185 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1F8EF0571D52808E006BD185 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -120,13 +122,14 @@
 				1F8EF06C1D529B4F006BD185 /* MessagesViewController.swift */,
 				1F8EF0761D530B85006BD185 /* DiscoverViewController.swift */,
 				1F8EF0561D52808E006BD185 /* Main.storyboard */,
+				1F7035AC1D594104004CF85F /* User.swift */,
+				1F92540C1D568F0D0009F86A /* Message.swift */,
 				1F7035801D57045D004CF85F /* CoreDataStack.swift */,
 				1F70358D1D570CD0004CF85F /* bluchat.xcdatamodeld */,
 				1F7035A81D571D49004CF85F /* ChatMessage+CoreDataProperties.swift */,
 				1F7035A91D571D49004CF85F /* ChatMessage.swift */,
 				1F7035961D571514004CF85F /* ChatLog+CoreDataProperties.swift */,
 				1F7035911D570D1E004CF85F /* ChatLog.swift */,
-				1F92540C1D568F0D0009F86A /* Message.swift */,
 				1F8EF0741D52E7A6006BD185 /* MPCManager.swift */,
 				1F8EF0721D52B80D006BD185 /* ChatLogCell.swift */,
 				1F8EF0591D52808E006BD185 /* Assets.xcassets */,
@@ -272,6 +275,7 @@
 				1F8EF06B1D5298FF006BD185 /* ChatsViewController.swift in Sources */,
 				1F7035931D570D1E004CF85F /* ChatLog.swift in Sources */,
 				1F7035AB1D571D49004CF85F /* ChatMessage.swift in Sources */,
+				1F7035AD1D594104004CF85F /* User.swift in Sources */,
 				1F7035811D57045D004CF85F /* CoreDataStack.swift in Sources */,
 				1F92540D1D568F0D0009F86A /* Message.swift in Sources */,
 				1F92540F1D5696DD0009F86A /* Settings.swift in Sources */,

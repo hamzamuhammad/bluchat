@@ -71,7 +71,7 @@
                                 <connections>
                                     <outlet property="lastMessageReceivedLabel" destination="fRm-Wp-gsf" id="pEg-sM-0El"/>
                                     <outlet property="lastMessageTimeLabel" destination="VwR-b0-HYk" id="Knw-8Y-vM3"/>
-                                    <outlet property="recipientNameLabel" destination="dp6-YG-oXq" id="2ke-XK-Skh"/>
+                                    <outlet property="recipientNameLabel" destination="dp6-YG-oXq" id="Uoy-yc-wtr"/>
                                     <segue destination="8ow-AC-Bor" kind="show" identifier="ShowMessages" id="2HW-GQ-oRD"/>
                                 </connections>
                             </tableViewCell>

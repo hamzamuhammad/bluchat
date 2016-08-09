@@ -13,31 +13,40 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate {
     // This class will login user into facebook!
     
     var fbLoginSuccess = false
-    var userEmail: String?
+    var user: User?
+    
+    let userArchiveURL: NSURL = {
+        let documentsDirectories = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
+        let documentDirectory = documentsDirectories.first!
+        return documentDirectory.URLByAppendingPathComponent("user.archive")
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Skip FBLogin if user already logged in
-        if (FBSDKAccessToken.currentAccessToken() != nil)
-        {
-            fbLoginSuccess = true
-        }
-        else
-        {
+//        // Skip FBLogin if user already logged in
+//        if (FBSDKAccessToken.currentAccessToken() != nil)
+//        {
+//            fbLoginSuccess = true
+//        }
+//        else
+//        {
             // Set up login button and permissions
             let loginView : FBSDKLoginButton = FBSDKLoginButton()
             self.view.addSubview(loginView)
             loginView.center = self.view.center
             loginView.readPermissions = ["public_profile", "email", "user_friends"]
             loginView.delegate = self
-        }
+//        }
         
     }
     
     override func viewDidAppear(animated: Bool) {
         // Prevent logout button from appearing instead of segue
         if FBSDKAccessToken.currentAccessToken() != nil || fbLoginSuccess == true {
+            
+            // Have to load User object from storage and segue to chats main
+            loadUser()
             performSegueWithIdentifier("ShowMain", sender: self)
         }
     }
@@ -74,7 +83,10 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate {
                     
                     print("email: \(userEmail)")
                     print("name: \(userName)")
-                    self.userEmail = userEmail
+                    
+                    // Have to put User object in storage
+                    self.saveUser(userEmail!, userName: userName!)
+                    
                     SCUser.registerWithUsername(userEmail!, password: userName!) { error in
                         print("error registering user: \(error)")
                     }
@@ -114,10 +126,28 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate {
             
             // Here, we will retrieve all chat logs from core data and set them to the [ChatLog] array
             try! chatsViewController.chatLogStore = chatsViewController.fetchMainQueueChatLogs(predicate: nil, sortDescriptors: nil)
-            chatsViewController.userEmail = userEmail
+            chatsViewController.user = user
         }
     }
     
+    func saveUser(userEmail: String, userName: String) -> Bool {
+        
+        // Make new user object, and save that to archive
+        user = User(email: userEmail, name: userName)
+        print("Saving items to: \(userArchiveURL.path!)")
+        return NSKeyedArchiver.archiveRootObject(user!, toFile: userArchiveURL.path!)
+    }
+    
+    func loadUser() {
+        
+        // Get user object from archive and set it as our current user
+        if let archivedUser = NSKeyedUnarchiver.unarchiveObjectWithFile(userArchiveURL.path!) as? User {
+            user = archivedUser
+        }
+        else {
+            print("Error loading user!")
+        }
+    }
     
     
 }

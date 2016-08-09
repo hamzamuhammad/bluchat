@@ -31,10 +31,10 @@ class ChatsViewController: UITableViewController, UISearchControllerDelegate, UI
     }()
     
     // Temp var for new chatlog email addresss
-    var newRecipientName: String?
+    var newrecipientEmail: String?
     
     // What userEmail is
-    var userEmail: String?
+    var user: User?
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return chatLogStore.count
@@ -50,7 +50,7 @@ class ChatsViewController: UITableViewController, UISearchControllerDelegate, UI
         
         cell.recipientNameLabel.text = chatLog.recipientName
         cell.lastMessageReceivedLabel.text = chatLog.lastMessageReceived
-        cell.lastMessageTimeLabel.text = dateFormatter.stringFromDate(chatLog.lastMessageTime)
+        cell.lastMessageTimeLabel.text = dateFormatter.stringFromDate(chatLog.lastMessageTime!)
         
         return cell
     }
@@ -87,13 +87,13 @@ class ChatsViewController: UITableViewController, UISearchControllerDelegate, UI
     
     func searchBarSearchButtonClicked(searchBar: UISearchBar) {
         print("search button clicked!")
-        
+
         // Here, we will check if the user entered a valid username and if so we make a chat for them
-        newRecipientName = searchBar.text!
-        SCUser.registerWithUsername(newRecipientName!, password: "asdf") { error in
+        newrecipientEmail = searchBar.text!
+        SCUser.registerWithUsername(newrecipientEmail!, password: "asdf") { error in
             // If we get in here, it means that the user exists:
             print("user exists!")
-            
+
             // Segue into a new chat
             self.performSegueWithIdentifier("ShowMessages", sender: self)
         }
@@ -103,7 +103,7 @@ class ChatsViewController: UITableViewController, UISearchControllerDelegate, UI
         if editingStyle == .Delete {
             let chatLog = chatLogStore[indexPath.row]
             
-            let title = "Delete \(chatLog.recipientName)'s chat log?"
+            let title = "Delete \(chatLog.recipientEmail)'s chat log?"
             let message = "Are you sure you want to delete this chat log?"
             
             let ac = UIAlertController(title: title, message: message, preferredStyle: .ActionSheet)
@@ -140,13 +140,13 @@ class ChatsViewController: UITableViewController, UISearchControllerDelegate, UI
             else {
                 
                 // In this case, there isn't a selected row, so make a new chat
-                chatLog = makeNewChatLog(newRecipientName!, lastMessageReceived: "", lastMessageTime: NSDate(), chatLogID: newRecipientName!, inContext: appDelegate.coreDataStack.mainQueueContext)
+                chatLog = makeNewChatLog(newrecipientEmail!, recipientName: "", lastMessageReceived: "", lastMessageTime: NSDate(), chatLogID: newrecipientEmail!, inContext: appDelegate.coreDataStack.mainQueueContext)
             }
             
             let messagesViewController = segue.destinationViewController as! MessagesViewController
             messagesViewController.chatLog = chatLog
             messagesViewController.cameFromDiscover = false
-            messagesViewController.userEmail = userEmail
+            messagesViewController.user = user
         }
     }
     
@@ -164,7 +164,7 @@ class ChatsViewController: UITableViewController, UISearchControllerDelegate, UI
     
     
     // When called from 'new chat' button, do this: makeNewChatLog(.., .., .., self.coreDataStack.mainQueueContext)
-    func makeNewChatLog(recipientName: String, lastMessageReceived: String, lastMessageTime: NSDate, chatLogID: String, inContext context: NSManagedObjectContext) -> ChatLog {
+    func makeNewChatLog(recipientEmail: String, recipientName: String, lastMessageReceived: String, lastMessageTime: NSDate, chatLogID: String, inContext context: NSManagedObjectContext) -> ChatLog {
         
 //        let fetchRequest = NSFetchRequest(entityName: "ChatLog")
 //        let predicate = NSPredicate(format: "chatLogID == \(chatLogID)")
@@ -181,6 +181,7 @@ class ChatsViewController: UITableViewController, UISearchControllerDelegate, UI
         var chatLog: ChatLog!
         context.performBlockAndWait() {
             chatLog = NSEntityDescription.insertNewObjectForEntityForName("ChatLog", inManagedObjectContext: context) as! ChatLog
+            chatLog.recipientEmail = recipientEmail
             chatLog.recipientName = recipientName
             chatLog.lastMessageReceived = lastMessageReceived
             chatLog.lastMessageTime = lastMessageTime

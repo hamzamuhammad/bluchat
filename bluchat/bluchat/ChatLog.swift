@@ -18,6 +18,7 @@ class ChatLog: NSManagedObject {
         super.awakeFromInsert()
         
         // Give the properties their initial values
+        recipientEmail = ""
         recipientName = ""
         lastMessageReceived = ""
         lastMessageTime = NSDate()

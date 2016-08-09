@@ -40,8 +40,8 @@ class MessagesViewController: JSQMessagesViewController {
     // Check whether chat originated from discover tab
     var cameFromDiscover: Bool?
     
-    // User email address
-    var userEmail: String?
+    // User object
+    var user: User?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -154,8 +154,8 @@ class MessagesViewController: JSQMessagesViewController {
             channel.delegate = self
             channel.subscribeToChannel()
             // set up user info from facebook login details
-            senderId = userEmail
-            senderDisplayName = chatLog.recipientName
+            senderId = user?.email
+            senderDisplayName = user?.name
         }
     }
 }
@@ -225,7 +225,7 @@ extension MessagesViewController {
         // Add to core data if not a bluetooth message
         if cameFromDiscover == false {
             let messageID = chatLog.chatLogID
-            storeMessage(message.senderId, senderDisplayName: message.senderId, date: message.date!, text: message.text, messageID: messageID, inContext: self.appDelegate.coreDataStack.mainQueueContext)
+            storeMessage(message.senderId, senderDisplayName: message.senderId, date: message.date!, text: message.text, messageID: messageID!, inContext: self.appDelegate.coreDataStack.mainQueueContext)
         }
         
         self.messages.append(message)
@@ -255,9 +255,10 @@ extension MessagesViewController {
         let messageToSend = Message()
         
         messageToSend.text = message.text
-        print("assigning our sent messages with a senderId of \(self.senderId) and a recipientId of \(chatLog.recipientName)")
+        print("assigning our sent messages with a senderId of \(self.senderId) and a recipientId of \(chatLog.recipientEmail)")
         messageToSend.senderId = self.senderId
-        messageToSend.recipientId = chatLog.recipientName
+        messageToSend.senderDisplayName = self.senderDisplayName
+        messageToSend.recipientId = chatLog.recipientEmail!
         messageToSend.channel = syncanoChannelName
         messageToSend.other_permissions = .Full
         
@@ -269,7 +270,7 @@ extension MessagesViewController {
     }
     
     func downloadNewestMessagesFromSyncano() {
-        print("id that we want to get: \(chatLog.recipientName)")
+        print("id that we want to get: \(chatLog.recipientEmail)")
         
         // Have to only update relevant msgs, so we go to bottom method and tweak it
         Message.please().giveMeDataObjectsWithCompletion { objects, error in
@@ -299,11 +300,16 @@ extension MessagesViewController {
     
     func jsqMessageFromSyncanoMessage(message: Message) -> JSQMessage {
 
-        let jsqMessage = JSQMessage(senderId: message.senderId, senderDisplayName: message.senderId, date: message.created_at, text: message.text)
+        let jsqMessage = JSQMessage(senderId: message.senderId, senderDisplayName: message.senderDisplayName, date: message.created_at, text: message.text)
         
         // Add to core data
         let messageID = chatLog.chatLogID
-        storeMessage(message.senderId, senderDisplayName: message.senderId, date: message.created_at!, text: message.text, messageID: messageID, inContext: self.appDelegate.coreDataStack.mainQueueContext)
+        storeMessage(message.senderId, senderDisplayName: message.senderDisplayName, date: message.created_at!, text: message.text, messageID: messageID!, inContext: self.appDelegate.coreDataStack.mainQueueContext)
+        
+        if chatLog.recipientName == "" && chatLog.recipientEmail == message.senderId {
+            chatLog.recipientName = message.senderDisplayName
+            navigationItem.title = chatLog.recipientName
+        }
         
         return jsqMessage
     }

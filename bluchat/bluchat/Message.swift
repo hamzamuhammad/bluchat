@@ -10,14 +10,18 @@ import UIKit
 import syncano_ios
 
 class Message: SCDataObject {
+    
     var text = ""
     var senderId = ""
-    var attachment: SCFile?
+    var senderDisplayName = ""
     var recipientId = ""
+
+    var attachment: SCFile?
     
     override class func extendedPropertiesMapping() -> [NSObject: AnyObject] {
         return [
         "senderId":"senderid",
-        "recipientId":"recipientid"]
+        "recipientId":"recipientid",
+        "senderDisplayName":"senderdisplayname"]
     }
 }
