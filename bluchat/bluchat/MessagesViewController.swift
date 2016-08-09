@@ -62,8 +62,8 @@ class MessagesViewController: JSQMessagesViewController {
         }
         else {
             // Otherwise, get messages from syncano backend
-            print("we download messages form syncano(shouldn't this be from core data?")
-            self.downloadNewestMessagesFromSyncano()
+            //print("we download messages form syncano(shouldn't this be from core data?")
+            //self.downloadNewestMessagesFromSyncano()
         }
         
         // Fix the JSQmessage alignment
@@ -109,22 +109,22 @@ class MessagesViewController: JSQMessagesViewController {
         super.viewWillAppear(animated)
         
         // Load saved messages from core data, and package them for JSQMessagesViewController
-        if (cameFromDiscover == false) {
-            print("we try to load messages")
-            loadChatMessages()
-            convertChatMessageToJSQMessage()
-        }
+//        if (cameFromDiscover == false) {
+//            print("we try to load messages")
+//            loadChatMessages()
+//            convertChatMessageToJSQMessage()
+//        }
         
         reloadMessagesView()
     }
     
     func convertChatMessageToJSQMessage() {
         
-        var tempMessages: [JSQMessage]!
+        var tempMessages = [JSQMessage]()
         
         // Check whether we have any stored messages first
         if let tempChatMessages = chatMessages {
-            
+            print("we are adding messages to actual array")
             for chatMsg in tempChatMessages {
                 let message = JSQMessage(senderId: chatMsg.senderID, senderDisplayName: chatMsg.senderDisplayName, date: chatMsg.date, text: chatMsg.text)
                 tempMessages.append(message)
@@ -134,6 +134,7 @@ class MessagesViewController: JSQMessagesViewController {
         }
         else {
             // Otherwise, we initialize a blank messages array
+            print("value of chatMessages: \(chatMessages)")
             messages = [JSQMessage]()
         }
     }
@@ -406,7 +407,7 @@ extension MessagesViewController {
         }
     }
     
-    // Update our chatlog array
+    // Update our chatMessages array
     func fetchMainQueueChatMessages(predicate predicate: NSPredicate? = nil, sortDescriptors: [NSSortDescriptor]? = nil) throws -> [ChatMessage] {
         
         let fetchRequest = NSFetchRequest(entityName: "ChatMessage")
@@ -432,15 +433,12 @@ extension MessagesViewController {
         return chatMessages
     }
     
-    //put this shit in viewdidload
+    // Load chat messages corresponding to chatLogID
     func loadChatMessages() {
+        
         let sortByDateTaken = NSSortDescriptor(key: "date", ascending: true)
         let allChatMessages = try! self.fetchMainQueueChatMessages(predicate: nil, sortDescriptors: [sortByDateTaken])
-        
-        NSOperationQueue.mainQueue().addOperationWithBlock() {
-            self.chatMessages = allChatMessages
-            // refresh table view here
-        }
+        self.chatMessages = allChatMessages
     }
 
     

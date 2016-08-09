@@ -170,8 +170,8 @@ class ChatsViewController: UITableViewController, UISearchControllerDelegate, UI
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        print("we are in chatsview view will appear")
-        loadChatLogs()
+//        print("we are in chatsview view will appear")
+//        loadChatLogs()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -260,9 +260,12 @@ class ChatsViewController: UITableViewController, UISearchControllerDelegate, UI
     func loadChatLogs() {
         let sortByDateTaken = NSSortDescriptor(key: "lastMessageTime", ascending: true)
         let allChatLogs = try! self.fetchMainQueueChatLogs(predicate: nil, sortDescriptors: [sortByDateTaken])
-        
+        print("we are in chatsview loadchatlogs method")
         NSOperationQueue.mainQueue().addOperationWithBlock() {
             self.chatLogStore = allChatLogs
+            for chatlog in self.chatLogStore {
+                print("loaded chatlog: \(chatlog.recipientName)")
+            }
             // refresh table view here
         }
     }
