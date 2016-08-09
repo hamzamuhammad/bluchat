@@ -58,19 +58,26 @@ class ChatsViewController: UITableViewController, UISearchControllerDelegate, UI
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Show a search bar that the user can enter in an email address to message
-        self.searchController = UISearchController(searchResultsController: nil)
-        self.searchController.searchResultsUpdater = self
-        self.searchController.delegate = self
-        self.searchController.searchBar.delegate = self
-        
-        self.searchController.hidesNavigationBarDuringPresentation = false
-        self.searchController.dimsBackgroundDuringPresentation = true
-        self.searchController.searchBar.placeholder = "New chat"
-        
-        self.navigationItem.titleView = searchController.searchBar
-        
-        self.definesPresentationContext = true
+        // If we already have a search bar
+        if let sC = searchController {
+            sC.active = true
+        }
+        else {
+            // Make a search bar that the user can enter in an email address to message
+            self.searchController = UISearchController(searchResultsController: nil)
+            self.searchController.searchResultsUpdater = self
+            self.searchController.delegate = self
+            self.searchController.searchBar.delegate = self
+            
+            self.searchController.hidesNavigationBarDuringPresentation = false
+            self.searchController.dimsBackgroundDuringPresentation = true
+            self.searchController.searchBar.placeholder = "New chat"
+            self.searchController.searchBar.searchBarStyle = .Prominent
+            
+            self.navigationItem.titleView = searchController.searchBar
+            
+            self.definesPresentationContext = true
+        }
         
         
         // Tweak our table cell height
@@ -78,6 +85,7 @@ class ChatsViewController: UITableViewController, UISearchControllerDelegate, UI
         tableView.estimatedRowHeight = 65
         
         // Load initial chatlogs
+        print("we load chatlogs from viewdidload")
         loadChatLogs()
     }
     
@@ -86,16 +94,17 @@ class ChatsViewController: UITableViewController, UISearchControllerDelegate, UI
     }
     
     func searchBarSearchButtonClicked(searchBar: UISearchBar) {
-        print("search button clicked!")
-
+        
         // Here, we will check if the user entered a valid username and if so we make a chat for them
         newrecipientEmail = searchBar.text!
         SCUser.registerWithUsername(newrecipientEmail!, password: "asdf") { error in
             // If we get in here, it means that the user exists:
-            print("user exists!")
 
             // Segue into a new chat
             self.performSegueWithIdentifier("ShowMessages", sender: self)
+            
+            // Hide search bar
+            self.searchController.active = false
         }
     }
     
@@ -103,7 +112,8 @@ class ChatsViewController: UITableViewController, UISearchControllerDelegate, UI
         if editingStyle == .Delete {
             let chatLog = chatLogStore[indexPath.row]
             
-            let title = "Delete \(chatLog.recipientEmail)'s chat log?"
+            let name = chatLog.recipientName! as String
+            let title = "Delete \(name)'s chat log?"
             let message = "Are you sure you want to delete this chat log?"
             
             let ac = UIAlertController(title: title, message: message, preferredStyle: .ActionSheet)
@@ -150,10 +160,18 @@ class ChatsViewController: UITableViewController, UISearchControllerDelegate, UI
         }
     }
     
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        print("we are in chatsview view will disappear")
+        saveChatLogChanges()
+    }
+    
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        tableView.reloadData()
+        print("we are in chatsview view will appear")
+        loadChatLogs()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -166,17 +184,17 @@ class ChatsViewController: UITableViewController, UISearchControllerDelegate, UI
     // When called from 'new chat' button, do this: makeNewChatLog(.., .., .., self.coreDataStack.mainQueueContext)
     func makeNewChatLog(recipientEmail: String, recipientName: String, lastMessageReceived: String, lastMessageTime: NSDate, chatLogID: String, inContext context: NSManagedObjectContext) -> ChatLog {
         
-//        let fetchRequest = NSFetchRequest(entityName: "ChatLog")
-//        let predicate = NSPredicate(format: "chatLogID == \(chatLogID)")
-//        fetchRequest.predicate = predicate
-//        
-//        var fetchedChatLogs: [ChatLog]!
-//        context.performBlockAndWait() {
-//            fetchedChatLogs = try! context.executeFetchRequest(fetchRequest) as! [ChatLog]
-//        }
-//        if fetchedChatLogs.count > 0 {
-//            return fetchedChatLogs.first!
-//        }
+        let fetchRequest = NSFetchRequest(entityName: "ChatLog")
+        let predicate = NSPredicate(format: "chatLogID LIKE %@", chatLogID)
+        fetchRequest.predicate = predicate
+        
+        var fetchedChatLogs: [ChatLog]!
+        context.performBlockAndWait() {
+            fetchedChatLogs = try! context.executeFetchRequest(fetchRequest) as! [ChatLog]
+        }
+        if fetchedChatLogs.count > 0 {
+            return fetchedChatLogs.first!
+        }
         
         var chatLog: ChatLog!
         context.performBlockAndWait() {

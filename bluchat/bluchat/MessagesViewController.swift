@@ -51,6 +51,7 @@ class MessagesViewController: JSQMessagesViewController {
         
         // Retrieve old messages from core data
         if (cameFromDiscover == false) {
+            print("we attempt to load chat messages from core data")
             loadChatMessages()
             convertChatMessageToJSQMessage()
         }
@@ -61,6 +62,7 @@ class MessagesViewController: JSQMessagesViewController {
         }
         else {
             // Otherwise, get messages from syncano backend
+            print("we download messages form syncano(shouldn't this be from core data?")
             self.downloadNewestMessagesFromSyncano()
         }
         
@@ -95,6 +97,7 @@ class MessagesViewController: JSQMessagesViewController {
         
         // If not an MPC connection, save messages to core data
         if (cameFromDiscover == false) {
+            print("we try to save message changes")
             saveChatMessageChanges()
         }
         
@@ -107,6 +110,7 @@ class MessagesViewController: JSQMessagesViewController {
         
         // Load saved messages from core data, and package them for JSQMessagesViewController
         if (cameFromDiscover == false) {
+            print("we try to load messages")
             loadChatMessages()
             convertChatMessageToJSQMessage()
         }
@@ -255,7 +259,6 @@ extension MessagesViewController {
         let messageToSend = Message()
         
         messageToSend.text = message.text
-        print("assigning our sent messages with a senderId of \(self.senderId) and a recipientId of \(chatLog.recipientEmail)")
         messageToSend.senderId = self.senderId
         messageToSend.senderDisplayName = self.senderDisplayName
         messageToSend.recipientId = chatLog.recipientEmail!
@@ -270,7 +273,6 @@ extension MessagesViewController {
     }
     
     func downloadNewestMessagesFromSyncano() {
-        print("id that we want to get: \(chatLog.recipientEmail)")
         
         // Have to only update relevant msgs, so we go to bottom method and tweak it
         Message.please().giveMeDataObjectsWithCompletion { objects, error in
@@ -288,7 +290,6 @@ extension MessagesViewController {
         var jsqMessages: [JSQMessage] = []
         
         for message in messages {
-            print("We are checking the messages from backend: message.senderId is \(message.senderId) and message.recipientId is \(message.recipientId)")
             // First check gets our own messages, second check gets messages addressed to us only
             if message.senderId == self.senderId || message.recipientId == self.senderId {
                 jsqMessages.append(self.jsqMessageFromSyncanoMessage(message))
