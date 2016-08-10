@@ -72,7 +72,16 @@ class ChatsViewController: UITableViewController, UISearchControllerDelegate, UI
             self.searchController.hidesNavigationBarDuringPresentation = false
             self.searchController.dimsBackgroundDuringPresentation = true
             self.searchController.searchBar.placeholder = "New chat"
+            
+            let color = UIColor(red:0.97, green:0.97, blue:0.97, alpha:1.0)
+            
+            self.navigationController?.navigationBar.translucent = false
+            self.navigationController?.navigationBar.barTintColor = color
+            
+            self.searchController.searchBar.barTintColor = color
             self.searchController.searchBar.searchBarStyle = .Prominent
+            searchController.searchBar.translucent = false
+            
             
             self.navigationItem.titleView = searchController.searchBar
             
