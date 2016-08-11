@@ -2,7 +2,7 @@
 //  ChatLog+CoreDataProperties.swift
 //  bluchat
 //
-//  Created by Hamza Muhammad on 8/8/16.
+//  Created by Hamza Muhammad on 8/10/16.
 //  Copyright © 2016 Hamza Muhammad. All rights reserved.
 //
 //  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
@@ -14,10 +14,11 @@ import CoreData
 
 extension ChatLog {
 
-    @NSManaged var recipientEmail: String?
+    @NSManaged var chatLogID: String?
     @NSManaged var lastMessageReceived: String?
     @NSManaged var lastMessageTime: NSDate?
-    @NSManaged var chatLogID: String?
+    @NSManaged var recipientEmail: String?
     @NSManaged var recipientName: String?
+    @NSManaged var isSeen: NSNumber?
 
 }

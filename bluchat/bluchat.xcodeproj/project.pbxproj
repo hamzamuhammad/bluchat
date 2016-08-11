@@ -31,6 +31,7 @@
 		1F92540F1D5696DD0009F86A /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F92540E1D5696DD0009F86A /* Settings.swift */; };
 		1F9254111D56984B0009F86A /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9254101D56984B0009F86A /* LoginViewController.swift */; };
 		1F9254141D56BA820009F86A /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F9254131D56BA820009F86A /* Bolts.framework */; };
+		1FD295621D5B052900D9164B /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD295611D5B052900D9164B /* NotificationManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -61,6 +62,7 @@
 		1F9254101D56984B0009F86A /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		1F9254121D56B8EF0009F86A /* Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
 		1F9254131D56BA820009F86A /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = ../../../FacebookSDK/Bolts.framework; sourceTree = "<group>"; };
+		1FD295611D5B052900D9164B /* NotificationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		87CFB6DF15BEF529AE7D0F7B /* Pods_bluchat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_bluchat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B600358B79F8119828254519 /* Pods-bluchat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-bluchat.release.xcconfig"; path = "Pods/Target Support Files/Pods-bluchat/Pods-bluchat.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -122,16 +124,17 @@
 				1F8EF06C1D529B4F006BD185 /* MessagesViewController.swift */,
 				1F8EF0761D530B85006BD185 /* DiscoverViewController.swift */,
 				1F8EF0561D52808E006BD185 /* Main.storyboard */,
-				1F7035AC1D594104004CF85F /* User.swift */,
-				1F92540C1D568F0D0009F86A /* Message.swift */,
 				1F7035801D57045D004CF85F /* CoreDataStack.swift */,
 				1F70358D1D570CD0004CF85F /* bluchat.xcdatamodeld */,
 				1F7035A81D571D49004CF85F /* ChatMessage+CoreDataProperties.swift */,
 				1F7035A91D571D49004CF85F /* ChatMessage.swift */,
 				1F7035961D571514004CF85F /* ChatLog+CoreDataProperties.swift */,
 				1F7035911D570D1E004CF85F /* ChatLog.swift */,
-				1F8EF0741D52E7A6006BD185 /* MPCManager.swift */,
 				1F8EF0721D52B80D006BD185 /* ChatLogCell.swift */,
+				1F8EF0741D52E7A6006BD185 /* MPCManager.swift */,
+				1FD295611D5B052900D9164B /* NotificationManager.swift */,
+				1F92540C1D568F0D0009F86A /* Message.swift */,
+				1F7035AC1D594104004CF85F /* User.swift */,
 				1F8EF0591D52808E006BD185 /* Assets.xcassets */,
 				1F8EF05B1D52808E006BD185 /* LaunchScreen.storyboard */,
 				1F8EF05E1D52808E006BD185 /* Info.plist */,
@@ -272,6 +275,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F8EF06D1D529B4F006BD185 /* MessagesViewController.swift in Sources */,
+				1FD295621D5B052900D9164B /* NotificationManager.swift in Sources */,
 				1F8EF06B1D5298FF006BD185 /* ChatsViewController.swift in Sources */,
 				1F7035931D570D1E004CF85F /* ChatLog.swift in Sources */,
 				1F7035AB1D571D49004CF85F /* ChatMessage.swift in Sources */,

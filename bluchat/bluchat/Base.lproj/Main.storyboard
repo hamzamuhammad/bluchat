@@ -57,6 +57,9 @@
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="K7y-kx-tMi">
+                                            <rect key="frame" x="501" y="17" width="30" height="30"/>
+                                        </imageView>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="fRm-Wp-gsf" firstAttribute="top" secondItem="dp6-YG-oXq" secondAttribute="bottom" constant="9" id="6E9-YN-hVN"/>
@@ -71,6 +74,7 @@
                                 <connections>
                                     <outlet property="lastMessageReceivedLabel" destination="fRm-Wp-gsf" id="pEg-sM-0El"/>
                                     <outlet property="lastMessageTimeLabel" destination="VwR-b0-HYk" id="Knw-8Y-vM3"/>
+                                    <outlet property="notificationLabel" destination="K7y-kx-tMi" id="5Pe-Nu-Jds"/>
                                     <outlet property="recipientNameLabel" destination="dp6-YG-oXq" id="Uoy-yc-wtr"/>
                                     <segue destination="8ow-AC-Bor" kind="show" identifier="ShowMessages" id="2HW-GQ-oRD"/>
                                 </connections>

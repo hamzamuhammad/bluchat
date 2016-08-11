@@ -23,5 +23,6 @@ class ChatLog: NSManagedObject {
         lastMessageReceived = ""
         lastMessageTime = NSDate()
         chatLogID = ""
+        isSeen = true
     }
 }

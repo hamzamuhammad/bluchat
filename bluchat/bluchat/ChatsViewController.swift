@@ -16,6 +16,9 @@ class ChatsViewController: UITableViewController, UISearchControllerDelegate, UI
     // Reference to appDelegate
     let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
     
+    // Connect ourselves to syncano
+    let channel = SCChannel(name: syncanoChannelName)
+    
     // Main data source
     var chatLogStore: [ChatLog]!
     
@@ -51,6 +54,14 @@ class ChatsViewController: UITableViewController, UISearchControllerDelegate, UI
         cell.recipientNameLabel.text = chatLog.recipientName
         cell.lastMessageReceivedLabel.text = chatLog.lastMessageReceived
         cell.lastMessageTimeLabel.text = dateFormatter.stringFromDate(chatLog.lastMessageTime!)
+        
+        // If there are new messages user hasn't seen
+        if chatLog.isSeen == false {
+            cell.notificationLabel.image = UIImage(named: "notificationDot")
+        }
+        else {
+            cell.notificationLabel.image = nil
+        }
         
         return cell
     }
@@ -88,13 +99,15 @@ class ChatsViewController: UITableViewController, UISearchControllerDelegate, UI
             self.definesPresentationContext = true
         }
         
+        // Set up notifications
+        channel.delegate = self
+        channel.subscribeToChannel()
         
         // Tweak our table cell height
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 65
         
         // Load initial chatlogs
-        print("initial load of chatlogs")
         loadChatLogs()
     }
     
@@ -132,6 +145,8 @@ class ChatsViewController: UITableViewController, UISearchControllerDelegate, UI
             
             let deleteAction = UIAlertAction(title: "Delete", style: .Destructive, handler: {
                 (action) -> Void in
+                let mainQueueContext = self.appDelegate.coreDataStack.mainQueueContext
+                mainQueueContext.deleteObject(chatLog)
                 self.chatLogStore.removeAtIndex(indexPath.row)
                 self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
             })
@@ -159,8 +174,10 @@ class ChatsViewController: UITableViewController, UISearchControllerDelegate, UI
             else {
                 
                 // In this case, there isn't a selected row, so make a new chat
-                chatLog = makeNewChatLog(newrecipientEmail!, recipientName: "", lastMessageReceived: "", lastMessageTime: NSDate(), chatLogID: newrecipientEmail!, inContext: appDelegate.coreDataStack.mainQueueContext)
+                chatLog = makeNewChatLog(newrecipientEmail!, recipientName: "New User", lastMessageReceived: "", lastMessageTime: NSDate(), chatLogID: newrecipientEmail!, inContext: appDelegate.coreDataStack.mainQueueContext)
             }
+            
+            chatLog?.isSeen = true
             
             let messagesViewController = segue.destinationViewController as! MessagesViewController
             messagesViewController.chatLog = chatLog
@@ -172,14 +189,12 @@ class ChatsViewController: UITableViewController, UISearchControllerDelegate, UI
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         
-        print("trying to save chatlogs")
         saveChatLogChanges()
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        print("trying to load chatlogs")
         loadChatLogs()
         reloadChatsView()
     }
@@ -274,18 +289,85 @@ class ChatsViewController: UITableViewController, UISearchControllerDelegate, UI
     
     //put this shit in viewdidload
     func loadChatLogs() {
+        
         let sortByDateTaken = NSSortDescriptor(key: "lastMessageTime", ascending: true)
         let allChatLogs = try! self.fetchMainQueueChatLogs(predicate: nil, sortDescriptors: [sortByDateTaken])
-        print("we are in CHATLOAD METHOD")
-        //NSOperationQueue.mainQueue().addOperationWithBlock() {
-            self.chatLogStore = allChatLogs
-            for chatlog in self.chatLogStore {
-                print("loaded chatlog: \(chatlog.recipientName)")
+        self.chatLogStore = allChatLogs
+    }
+    
+    func doesChatLogExist(chatLogRecipientId: String) -> Int {
+        
+        for i in 0 ..< chatLogStore.count {
+            if chatLogStore[i].recipientEmail == chatLogRecipientId {
+                return i
             }
-            // refresh table view here
-        //}
+        }
+        return -1
     }
 }
+
+//MARK - Channels
+extension ChatsViewController: SCChannelDelegate {
+    
+    func addMessageFromNotification(notification: SCChannelNotificationMessage) {
+        
+        let message = Message(fromDictionary: notification.payload!)
+        
+        addNewChatLog(message!.senderId, chatLogRecipientEmail: message!.recipientId)
+    }
+    
+    func addNewChatLog(senderId: String, chatLogRecipientEmail: String) {
+        
+        let index = doesChatLogExist(chatLogRecipientEmail)
+        
+        var chatLog: ChatLog!
+        
+        // If its a new convo
+        if index == -1 {
+            
+            // Make new chatlog
+            chatLog = makeNewChatLog(senderId, recipientName: "New User", lastMessageReceived: "", lastMessageTime: NSDate(), chatLogID: chatLogRecipientEmail, inContext: appDelegate.coreDataStack.mainQueueContext)
+        }
+        else {
+            // New message for existing convo, add notification message for that specific index
+            chatLog = chatLogStore[index]
+        }
+        
+        // Make notification dot appear
+        chatLog.isSeen = false
+        
+        // Add to our chatLogStore
+        chatLogStore.append(chatLog)
+        
+        print("received message, attempting to make notification + chatlog, chatLogStore size: \(chatLogStore.count)")
+        
+        print("attempting to refresh table...")
+        reloadChatsView()
+    }
+    
+    func updateMessageFromNotifcation(notification: SCChannelNotificationMessage) {
+        
+    }
+    
+    func deleteMessageFromNotfication(notification: SCChannelNotificationMessage) {
+        
+    }
+    
+    func channelDidReceiveNotificationMessage(notificationMessage: SCChannelNotificationMessage) {
+        
+        switch(notificationMessage.action) {
+        case .Create:
+            self.addMessageFromNotification(notificationMessage)
+        case .Delete:
+            self.deleteMessageFromNotfication(notificationMessage)
+        case .Update:
+            self.updateMessageFromNotifcation(notificationMessage)
+        default:
+            break
+        }
+    }
+}
+
 
 
 

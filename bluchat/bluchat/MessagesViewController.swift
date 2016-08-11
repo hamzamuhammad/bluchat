@@ -59,15 +59,9 @@ class MessagesViewController: JSQMessagesViewController {
             // Now, update what view with new messages from backend
             downloadNewestMessagesFromSyncano()
         }
-        
-        // If bluetooth, set up an observer for received msg
-        if (cameFromDiscover == true) {
-            NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(MessagesViewController.handleMPCReceivedDataWithNotification), name: "receivedMPCDataNotification", object: nil)
-        }
         else {
-            // Otherwise, get messages from syncano backend
-            //print("we download messages form syncano(shouldn't this be from core data?")
-            //self.downloadNewestMessagesFromSyncano()
+            // If bluetooth, set up an observer for received msg
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(MessagesViewController.handleMPCReceivedDataWithNotification), name: "receivedMPCDataNotification", object: nil)
         }
         
         // Fix the JSQmessage alignment
@@ -112,7 +106,6 @@ class MessagesViewController: JSQMessagesViewController {
         var isFound = false
         var lastMessageReceived = ""
         
-        print("we get here")
         while (isFound == false && index > 0) {
             if messages[index - 1].senderId == chatLog.recipientEmail! {
                 isFound = true
@@ -126,13 +119,6 @@ class MessagesViewController: JSQMessagesViewController {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
-        // Load saved messages from core data, and package them for JSQMessagesViewController
-//        if (cameFromDiscover == false) {
-//            print("we try to load messages")
-//            loadChatMessages()
-//            convertChatMessageToJSQMessage()
-//        }
         
         reloadMessagesView()
     }
@@ -152,7 +138,6 @@ class MessagesViewController: JSQMessagesViewController {
         }
         else {
             // Otherwise, we initialize a blank messages array
-            //print("value of chatMessages: \(chatMessages)")
             messages = [JSQMessage]()
         }
     }
@@ -331,7 +316,7 @@ extension MessagesViewController {
         let messageID = chatLog.chatLogID
         storeMessage(message.senderId, senderDisplayName: message.senderDisplayName, date: message.created_at!, text: message.text, messageID: messageID!, inContext: self.appDelegate.coreDataStack.mainQueueContext)
         
-        if chatLog.recipientName == "" && chatLog.recipientEmail == message.senderId {
+        if chatLog.recipientName == "New User" && chatLog.recipientEmail == message.senderId {
             chatLog.recipientName = message.senderDisplayName
             navigationItem.title = chatLog.recipientName
         }
@@ -356,7 +341,15 @@ extension MessagesViewController: SCChannelDelegate {
 
         // If the message is addressed to us, receive it
         if message!.recipientId == self.senderId {
-            self.messages.append(msg)
+            
+            // If its part of convo, add it
+            if message!.senderId == chatLog.recipientEmail {
+                self.messages.append(msg)
+            }
+            else {
+                // Otherwise, add it as a new convo and notify user
+                
+            }
         }
         else {
             // If we get here, we add the message to the proper chatLog or create a new one if chatlog doesn't exist
