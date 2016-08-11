@@ -13,6 +13,5 @@ class ChatLogCell: UITableViewCell {
     
     @IBOutlet var recipientNameLabel: UILabel!
     @IBOutlet var lastMessageReceivedLabel: UILabel!
-    @IBOutlet var lastMessageTimeLabel: UILabel!
-    @IBOutlet var notificationLabel: UIImageView!
+    @IBOutlet var lastMessageTimeLabel: UILabel!    
 }

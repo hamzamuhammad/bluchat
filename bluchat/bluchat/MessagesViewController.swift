@@ -346,24 +346,16 @@ extension MessagesViewController: SCChannelDelegate {
             if message!.senderId == chatLog.recipientEmail {
                 self.messages.append(msg)
             }
-            else {
-                // Otherwise, add it as a new convo and notify user
-                
-            }
-        }
-        else {
-            // If we get here, we add the message to the proper chatLog or create a new one if chatlog doesn't exist
-            // TODO
         }
         
         self.finishReceivingMessage()
     }
     
-    func updateMessageFromNotifcation(notification: SCChannelNotificationMessage) {
+    func updateMessageFromNotification(notification: SCChannelNotificationMessage) {
         
     }
     
-    func deleteMessageFromNotfication(notification: SCChannelNotificationMessage) {
+    func deleteMessageFromNotification(notification: SCChannelNotificationMessage) {
         
     }
     
@@ -373,9 +365,9 @@ extension MessagesViewController: SCChannelDelegate {
         case .Create:
             self.addMessageFromNotification(notificationMessage)
         case .Delete:
-            self.deleteMessageFromNotfication(notificationMessage)
+            self.deleteMessageFromNotification(notificationMessage)
         case .Update:
-            self.updateMessageFromNotifcation(notificationMessage)
+            self.updateMessageFromNotification(notificationMessage)
         default:
             break
         }

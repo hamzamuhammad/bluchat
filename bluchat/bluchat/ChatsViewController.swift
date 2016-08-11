@@ -54,13 +54,11 @@ class ChatsViewController: UITableViewController, UISearchControllerDelegate, UI
         cell.recipientNameLabel.text = chatLog.recipientName
         cell.lastMessageReceivedLabel.text = chatLog.lastMessageReceived
         cell.lastMessageTimeLabel.text = dateFormatter.stringFromDate(chatLog.lastMessageTime!)
+        cell.backgroundColor = UIColor(red:0.75, green:0.87, blue:0.94, alpha:1.0)
         
         // If there are new messages user hasn't seen
-        if chatLog.isSeen == false {
-            cell.notificationLabel.image = UIImage(named: "notificationDot")
-        }
-        else {
-            cell.notificationLabel.image = nil
+        if chatLog.isSeen == true {
+            cell.backgroundColor = UIColor.whiteColor()
         }
         
         return cell
@@ -235,6 +233,7 @@ class ChatsViewController: UITableViewController, UISearchControllerDelegate, UI
             chatLog.lastMessageReceived = lastMessageReceived
             chatLog.lastMessageTime = lastMessageTime
             chatLog.chatLogID = chatLogID
+            chatLog.isSeen = false
         }
         
         return chatLog
@@ -298,7 +297,9 @@ class ChatsViewController: UITableViewController, UISearchControllerDelegate, UI
     func doesChatLogExist(chatLogRecipientId: String) -> Int {
         
         for i in 0 ..< chatLogStore.count {
-            if chatLogStore[i].recipientEmail == chatLogRecipientId {
+            print("comparing \(chatLogStore[i].recipientEmail!) and \(chatLogRecipientId)")
+            if chatLogStore[i].recipientEmail! == chatLogRecipientId {
+                print("should get in here")
                 return i
             }
         }
@@ -318,15 +319,17 @@ extension ChatsViewController: SCChannelDelegate {
     
     func addNewChatLog(senderId: String, chatLogRecipientEmail: String) {
         
-        let index = doesChatLogExist(chatLogRecipientEmail)
+        let index = doesChatLogExist(senderId)
         
         var chatLog: ChatLog!
         
         // If its a new convo
         if index == -1 {
-            
             // Make new chatlog
-            chatLog = makeNewChatLog(senderId, recipientName: "New User", lastMessageReceived: "", lastMessageTime: NSDate(), chatLogID: chatLogRecipientEmail, inContext: appDelegate.coreDataStack.mainQueueContext)
+            chatLog = makeNewChatLog(senderId, recipientName: "New User", lastMessageReceived: " ", lastMessageTime: NSDate(), chatLogID: chatLogRecipientEmail, inContext: appDelegate.coreDataStack.mainQueueContext)
+            
+            // Add to our chatLogStore
+            chatLogStore.append(chatLog)
         }
         else {
             // New message for existing convo, add notification message for that specific index
@@ -336,20 +339,17 @@ extension ChatsViewController: SCChannelDelegate {
         // Make notification dot appear
         chatLog.isSeen = false
         
-        // Add to our chatLogStore
-        chatLogStore.append(chatLog)
-        
         print("received message, attempting to make notification + chatlog, chatLogStore size: \(chatLogStore.count)")
         
         print("attempting to refresh table...")
         reloadChatsView()
     }
     
-    func updateMessageFromNotifcation(notification: SCChannelNotificationMessage) {
+    func updateMessageFromNotification(notification: SCChannelNotificationMessage) {
         
     }
     
-    func deleteMessageFromNotfication(notification: SCChannelNotificationMessage) {
+    func deleteMessageFromNotification(notification: SCChannelNotificationMessage) {
         
     }
     
@@ -359,9 +359,9 @@ extension ChatsViewController: SCChannelDelegate {
         case .Create:
             self.addMessageFromNotification(notificationMessage)
         case .Delete:
-            self.deleteMessageFromNotfication(notificationMessage)
+            self.deleteMessageFromNotification(notificationMessage)
         case .Update:
-            self.updateMessageFromNotifcation(notificationMessage)
+            self.updateMessageFromNotification(notificationMessage)
         default:
             break
         }
