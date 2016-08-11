@@ -24,20 +24,14 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        // Skip FBLogin if user already logged in
-//        if (FBSDKAccessToken.currentAccessToken() != nil)
-//        {
-//            fbLoginSuccess = true
-//        }
-//        else
-//        {
-            // Set up login button and permissions
-            let loginView : FBSDKLoginButton = FBSDKLoginButton()
-            self.view.addSubview(loginView)
-            loginView.center = self.view.center
-            loginView.readPermissions = ["public_profile", "email", "user_friends"]
-            loginView.delegate = self
-//        }
+        self.view.backgroundColor = UIColor(red:0.75, green:0.87, blue:0.94, alpha:1.0)
+
+        
+        let loginView : FBSDKLoginButton = FBSDKLoginButton()
+        self.view.addSubview(loginView)
+        loginView.center = self.view.center
+        loginView.readPermissions = ["public_profile", "email", "user_friends"]
+        loginView.delegate = self
         
     }
     
